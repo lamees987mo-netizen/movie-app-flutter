@@ -1,0 +1,56 @@
+{
+  "@@locale": "ar",
+
+  "appTitle": "تطبيق الأفلام",
+
+  "navHome": "الرئيسية",
+  "navSearch": "البحث",
+  "navWatchlist": "قائمة المشاهدة",
+  "navSettings": "الإعدادات",
+
+  "moviesTrending": "الأكثر رواجًا",
+  "moviesTopRated": "الأعلى تقييمًا",
+  "moviesUpcoming": "قريبًا",
+  "moviesNowPlaying": "يُعرض الآن",
+  "moviesSeeAll": "عرض الكل",
+
+  "commonRetry": "إعادة المحاولة",
+  "commonErrorGeneric": "حدث خطأ ما. حاول مرة أخرى.",
+  "commonErrorNetwork": "لا يوجد اتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.",
+  "commonErrorServer": "الخادم يواجه مشكلة. حاول لاحقًا.",
+  "commonNotFound": "لم نعثر على ما تبحث عنه.",
+  "commonCacheError": "تعذّرت قراءة البيانات المحفوظة على الجهاز.",
+  "commonOfflineBanner": "أنت غير متصل. يتم عرض المحتوى المحفوظ.",
+  "commonEmpty": "لا يوجد شيء هنا بعد.",
+
+  "detailsOverview": "القصة",
+  "detailsCast": "طاقم التمثيل",
+  "detailsPlayTrailer": "تشغيل الإعلان",
+  "detailsRuntimeMinutes": "{minutes} دقيقة",
+  "detailsReleaseDate": "تاريخ الإصدار",
+  "detailsNoOverview": "لا يوجد وصف متاح.",
+  "detailsAddToWatchlist": "أضف إلى قائمة المشاهدة",
+  "detailsRemoveFromWatchlist": "إزالة من قائمة المشاهدة",
+
+  "searchHint": "ابحث عن فيلم",
+  "searchEmptyQuery": "اكتب اسم فيلم لبدء البحث.",
+  "searchNoResults": "لا توجد أفلام تطابق \"{query}\".",
+
+  "watchlistEmptyTitle": "قائمة المشاهدة فارغة",
+  "watchlistEmptySubtitle": "الأفلام التي تحفظها ستظهر هنا، حتى بدون إنترنت.",
+  "watchlistClearAll": "مسح الكل",
+  "watchlistClearConfirmTitle": "مسح قائمة المشاهدة؟",
+  "watchlistClearConfirmBody": "سيؤدي هذا إلى إزالة جميع الأفلام من قائمة المشاهدة.",
+  "watchlistCancel": "إلغاء",
+  "watchlistConfirm": "مسح",
+
+  "settingsTheme": "المظهر",
+  "settingsThemeLight": "فاتح",
+  "settingsThemeDark": "داكن",
+  "settingsThemeSystem": "حسب النظام",
+  "settingsLanguage": "اللغة",
+  "settingsEnglish": "English",
+  "settingsArabic": "العربية",
+
+  "tmdbAttribution": "يستخدم هذا المنتج واجهة TMDB البرمجية لكنه غير معتمد أو موثّق من TMDB."
+}

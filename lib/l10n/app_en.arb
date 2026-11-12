@@ -1,0 +1,68 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Movie App",
+
+  "navHome": "Home",
+  "navSearch": "Search",
+  "navWatchlist": "Watchlist",
+  "navSettings": "Settings",
+
+  "moviesTrending": "Trending",
+  "moviesTopRated": "Top Rated",
+  "moviesUpcoming": "Upcoming",
+  "moviesNowPlaying": "Now Playing",
+  "moviesSeeAll": "See all",
+
+  "commonRetry": "Retry",
+  "commonErrorGeneric": "Something went wrong. Please try again.",
+  "commonErrorNetwork": "No internet connection. Check your network and try again.",
+  "commonErrorServer": "The server is having trouble. Please try again later.",
+  "commonNotFound": "We couldn't find what you were looking for.",
+  "commonCacheError": "Couldn't read saved data on this device.",
+  "commonOfflineBanner": "You're offline. Showing saved content.",
+  "commonEmpty": "Nothing here yet.",
+
+  "detailsOverview": "Overview",
+  "detailsCast": "Cast",
+  "detailsPlayTrailer": "Play trailer",
+  "detailsRuntimeMinutes": "{minutes} min",
+  "@detailsRuntimeMinutes": {
+    "description": "Movie runtime in minutes.",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "detailsReleaseDate": "Release date",
+  "detailsNoOverview": "No overview available.",
+  "detailsAddToWatchlist": "Add to watchlist",
+  "detailsRemoveFromWatchlist": "Remove from watchlist",
+
+  "searchHint": "Search movies",
+  "searchEmptyQuery": "Type a movie name to start searching.",
+  "searchNoResults": "No movies match \"{query}\".",
+  "@searchNoResults": {
+    "description": "Shown when a search returns no results.",
+    "placeholders": {
+      "query": { "type": "String" }
+    }
+  },
+
+  "watchlistEmptyTitle": "Your watchlist is empty",
+  "watchlistEmptySubtitle": "Movies you save will appear here, even offline.",
+  "watchlistClearAll": "Clear all",
+  "watchlistClearConfirmTitle": "Clear watchlist?",
+  "watchlistClearConfirmBody": "This removes every movie from your watchlist.",
+  "watchlistCancel": "Cancel",
+  "watchlistConfirm": "Clear",
+
+  "settingsTheme": "Theme",
+  "settingsThemeLight": "Light",
+  "settingsThemeDark": "Dark",
+  "settingsThemeSystem": "System",
+  "settingsLanguage": "Language",
+  "settingsEnglish": "English",
+  "settingsArabic": "العربية",
+
+  "tmdbAttribution": "This product uses the TMDB API but is not endorsed or certified by TMDB."
+}
