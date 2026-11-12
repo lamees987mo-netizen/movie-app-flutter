@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:movie_app/core/error/exceptions.dart';
 import 'package:movie_app/core/error/failures.dart';
 import 'package:movie_app/core/result/result.dart';
+import 'package:movie_app/features/movies/data/datasources/movies_local_data_source.dart';
 import 'package:movie_app/features/movies/data/datasources/movies_remote_data_source.dart';
 import 'package:movie_app/features/movies/data/models/movie_details_model.dart';
 import 'package:movie_app/features/movies/data/models/movies_page_model.dart';
@@ -14,8 +15,12 @@ import '../../../../fixtures/fixture_reader.dart';
 class MockMoviesRemoteDataSource extends Mock
     implements MoviesRemoteDataSource {}
 
+class MockMoviesLocalDataSource extends Mock implements MoviesLocalDataSource {}
+
 void main() {
   late MockMoviesRemoteDataSource dataSource;
+  late MockMoviesLocalDataSource localDataSource;
+  late String languageCode;
   late MoviesRepositoryImpl repository;
 
   final pageModel = MoviesPageModel.fromJson(jsonFixture('movies_page.json'));
@@ -23,11 +28,140 @@ void main() {
     jsonFixture('movie_details.json'),
   );
 
-  setUpAll(() => registerFallbackValue(MovieCategory.trending));
+  setUpAll(() {
+    registerFallbackValue(MovieCategory.trending);
+    registerFallbackValue(pageModel);
+  });
 
   setUp(() {
     dataSource = MockMoviesRemoteDataSource();
-    repository = MoviesRepositoryImpl(dataSource);
+    localDataSource = MockMoviesLocalDataSource();
+    languageCode = 'en';
+    repository = MoviesRepositoryImpl(
+      dataSource,
+      localDataSource: localDataSource,
+      languageCode: () => languageCode,
+    );
+    when(
+      () => localDataSource.cacheFirstPage(any(), any(), any()),
+    ).thenAnswer((_) async {});
+    when(() => localDataSource.getCachedFirstPage(any(), any())).thenReturn(
+      null,
+    );
+  });
+
+  group('getMovies offline cache', () {
+    void goOffline() => when(
+      () => dataSource.getMovies(any(), page: any(named: 'page')),
+    ).thenThrow(const NetworkException());
+
+    test('saves page 1 with the current language', () async {
+      languageCode = 'ar';
+      when(
+        () => dataSource.getMovies(MovieCategory.trending),
+      ).thenAnswer((_) async => pageModel);
+
+      await repository.getMovies(MovieCategory.trending);
+
+      verify(
+        () => localDataSource.cacheFirstPage(
+          MovieCategory.trending,
+          'ar',
+          pageModel,
+        ),
+      ).called(1);
+    });
+
+    test('does not save later pages', () async {
+      when(
+        () => dataSource.getMovies(any(), page: 2),
+      ).thenAnswer((_) async => pageModel);
+
+      await repository.getMovies(MovieCategory.trending, page: 2);
+
+      verifyNever(() => localDataSource.cacheFirstPage(any(), any(), any()));
+    });
+
+    test('still succeeds when saving fails', () async {
+      when(
+        () => dataSource.getMovies(any()),
+      ).thenAnswer((_) async => pageModel);
+      when(
+        () => localDataSource.cacheFirstPage(any(), any(), any()),
+      ).thenThrow(const CacheException());
+
+      final result = await repository.getMovies(MovieCategory.trending);
+
+      expect(result, Success(pageModel.toEntity()));
+    });
+
+    test('returns the saved page when offline', () async {
+      goOffline();
+      when(
+        () => localDataSource.getCachedFirstPage(MovieCategory.upcoming, 'en'),
+      ).thenReturn(pageModel);
+
+      final result = await repository.getMovies(MovieCategory.upcoming);
+
+      expect(result, Success(pageModel.toEntity()));
+    });
+
+    test('reads the cache of the current language', () async {
+      goOffline();
+      languageCode = 'ar';
+
+      await repository.getMovies(MovieCategory.trending);
+
+      verify(
+        () => localDataSource.getCachedFirstPage(MovieCategory.trending, 'ar'),
+      ).called(1);
+    });
+
+    test('returns NetworkFailure when offline with no cache', () async {
+      goOffline();
+
+      final result = await repository.getMovies(MovieCategory.trending);
+
+      expect((result as Err).failure, const NetworkFailure());
+    });
+
+    test('returns NetworkFailure when the cache cannot be read', () async {
+      goOffline();
+      when(
+        () => localDataSource.getCachedFirstPage(any(), any()),
+      ).thenThrow(const CacheException());
+
+      final result = await repository.getMovies(MovieCategory.trending);
+
+      expect((result as Err).failure, const NetworkFailure());
+    });
+
+    test('does not use the cache for server errors', () async {
+      when(
+        () => dataSource.getMovies(any(), page: any(named: 'page')),
+      ).thenThrow(const ServerException(statusCode: 500));
+      when(
+        () => localDataSource.getCachedFirstPage(any(), any()),
+      ).thenReturn(pageModel);
+
+      final result = await repository.getMovies(MovieCategory.trending);
+
+      expect((result as Err).failure, const ServerFailure(500));
+    });
+
+    test('does not use the cache for later pages', () async {
+      goOffline();
+      when(
+        () => localDataSource.getCachedFirstPage(any(), any()),
+      ).thenReturn(pageModel);
+
+      final result = await repository.getMovies(
+        MovieCategory.trending,
+        page: 2,
+      );
+
+      expect((result as Err).failure, const NetworkFailure());
+    });
   });
 
   group('getMovies', () {
