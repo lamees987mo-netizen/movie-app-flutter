@@ -68,6 +68,15 @@ class SettingsPage extends StatelessWidget {
                     .setLocale(Locale(selection.single)),
               ),
             ),
+            const SizedBox(height: AppSpacing.xl),
+            // Required by TMDB's terms of use.
+            Text(
+              l10n.tmdbAttribution,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),

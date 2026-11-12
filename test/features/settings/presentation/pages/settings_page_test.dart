@@ -53,6 +53,14 @@ void main() {
     expect(find.text('العربية'), findsOneWidget);
   });
 
+  testWidgets('shows the TMDB attribution (required by TMDB)', (
+    tester,
+  ) async {
+    await pumpPage(tester);
+
+    expect(find.textContaining('uses the TMDB API'), findsOneWidget);
+  });
+
   testWidgets('selects the current theme and language', (tester) async {
     when(() => cubit.state).thenReturn(
       const SettingsState(themeMode: ThemeMode.dark, locale: Locale('ar')),
