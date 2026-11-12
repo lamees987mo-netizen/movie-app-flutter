@@ -74,7 +74,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String detailsRuntimeMinutes(int minutes) {
-    return '$minutes دقيقة';
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes دقيقة',
+      few: '$minutes دقائق',
+      two: 'دقيقتان',
+      one: 'دقيقة واحدة',
+    );
+    return '$_temp0';
   }
 
   @override

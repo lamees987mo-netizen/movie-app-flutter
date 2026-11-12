@@ -26,7 +26,7 @@
   "detailsOverview": "القصة",
   "detailsCast": "طاقم التمثيل",
   "detailsPlayTrailer": "تشغيل الإعلان",
-  "detailsRuntimeMinutes": "{minutes} دقيقة",
+  "detailsRuntimeMinutes": "{minutes, plural, =1{دقيقة واحدة} =2{دقيقتان} few{{minutes} دقائق} other{{minutes} دقيقة}}",
   "detailsReleaseDate": "تاريخ الإصدار",
   "detailsNoOverview": "لا يوجد وصف متاح.",
   "detailsAddToWatchlist": "أضف إلى قائمة المشاهدة",
