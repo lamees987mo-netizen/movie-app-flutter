@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/theme/app_theme.dart';
+import 'package:movie_app/core/widgets/offline_banner.dart';
 import 'package:movie_app/features/movies/domain/entities/movie_category.dart';
 import 'package:movie_app/features/movies/presentation/cubit/movie_section_cubit.dart';
 import 'package:movie_app/features/movies/presentation/widgets/movie_section.dart';
@@ -40,6 +42,11 @@ class _HomePageState extends State<HomePage> {
     for (final category in _categories) sl<MovieSectionCubit>(param1: category),
   ];
 
+  /// Shows the "You're offline" bar. Without internet the repository
+  /// returns the cached first page, so the sections still have movies.
+  bool _isOffline = false;
+  late final StreamSubscription<List<ConnectivityResult>> _connectivity;
+
   @override
   void initState() {
     super.initState();
@@ -47,10 +54,27 @@ class _HomePageState extends State<HomePage> {
     for (final cubit in _cubits) {
       unawaited(cubit.load());
     }
+
+    final connectivity = sl<Connectivity>();
+    unawaited(connectivity.checkConnectivity().then(_onConnectivityChanged));
+    _connectivity = connectivity.onConnectivityChanged.listen(
+      _onConnectivityChanged,
+    );
+  }
+
+  void _onConnectivityChanged(List<ConnectivityResult> results) {
+    if (!mounted) return;
+    final isOffline = results.every((r) => r == ConnectivityResult.none);
+    if (isOffline == _isOffline) return;
+
+    setState(() => _isOffline = isOffline);
+    // Back online: replace cached (or failed) sections with fresh data.
+    if (!isOffline) unawaited(_refresh());
   }
 
   @override
   void dispose() {
+    unawaited(_connectivity.cancel());
     for (final cubit in _cubits) {
       unawaited(cubit.close());
     }
@@ -70,25 +94,33 @@ class _HomePageState extends State<HomePage> {
       body: BlocListener<SettingsCubit, SettingsState>(
         listenWhen: (previous, current) => previous.locale != current.locale,
         listener: (context, _) => unawaited(_refresh()),
-        child: RefreshIndicator(
-          onRefresh: _refresh,
-          child: ListView.separated(
-            // Lets the user pull to refresh even when the content is short.
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsetsDirectional.symmetric(
-              vertical: AppSpacing.md,
+        child: Column(
+          children: [
+            if (_isOffline) const OfflineBanner(),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.separated(
+                  // Lets the user pull to refresh even when content is short.
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsetsDirectional.symmetric(
+                    vertical: AppSpacing.md,
+                  ),
+                  itemCount: _cubits.length,
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(height: AppSpacing.lg),
+                  itemBuilder: (context, index) {
+                    final cubit = _cubits[index];
+                    // `.value`: this State, not the provider, owns the cubit.
+                    return BlocProvider.value(
+                      value: cubit,
+                      child: MovieSection(category: cubit.category),
+                    );
+                  },
+                ),
+              ),
             ),
-            itemCount: _cubits.length,
-            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
-            itemBuilder: (context, index) {
-              final cubit = _cubits[index];
-              // `.value` because this State, not the provider, owns the cubit.
-              return BlocProvider.value(
-                value: cubit,
-                child: MovieSection(category: cubit.category),
-              );
-            },
-          ),
+          ],
         ),
       ),
     );
