@@ -1,10 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_app/core/router/app_shell.dart';
 import 'package:movie_app/core/router/routes.dart';
+import 'package:movie_app/core/widgets/error_view.dart';
 import 'package:movie_app/features/movies/movies_routes.dart';
 import 'package:movie_app/features/search/search_routes.dart';
 import 'package:movie_app/features/settings/settings_routes.dart';
 import 'package:movie_app/features/watchlist/watchlist_routes.dart';
+import 'package:movie_app/l10n/generated/app_localizations.dart';
 
 /// Builds the app's router.
 ///
@@ -14,6 +17,12 @@ import 'package:movie_app/features/watchlist/watchlist_routes.dart';
 GoRouter createAppRouter() {
   return GoRouter(
     initialLocation: Routes.home,
+    // Unknown paths: a localized "not found" screen instead of go_router's
+    // default English page.
+    errorBuilder: (context, state) => Scaffold(
+      appBar: AppBar(),
+      body: ErrorView(message: AppLocalizations.of(context).commonNotFound),
+    ),
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>

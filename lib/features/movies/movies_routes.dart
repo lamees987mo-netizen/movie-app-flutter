@@ -22,6 +22,8 @@ final List<RouteBase> moviesRoutes = [
   GoRoute(
     path: Routes.movieDetails,
     name: RouteNames.movieDetails,
+    // A bad link like `/movie/abc` goes Home instead of crashing the page.
+    redirect: (context, state) => _movieId(state) == null ? Routes.home : null,
     builder: (context, state) {
       // `extra` is optional (see MovieDetailsArgs): a deep link has none.
       final args = switch (state.extra) {
@@ -29,7 +31,7 @@ final List<RouteBase> moviesRoutes = [
         _ => const MovieDetailsArgs(),
       };
       return MovieDetailsPage(
-        movieId: int.parse(state.pathParameters['id']!),
+        movieId: _movieId(state)!,
         heroTag: args.heroTag,
         preview: args.movie,
       );
@@ -38,8 +40,14 @@ final List<RouteBase> moviesRoutes = [
   GoRoute(
     path: Routes.seeAll,
     name: RouteNames.seeAll,
-    builder: (context, state) => SeeAllPage(
-      category: MovieCategory.values.byName(state.pathParameters['category']!),
-    ),
+    // Same for an unknown category like `/see-all/popular`.
+    redirect: (context, state) => _category(state) == null ? Routes.home : null,
+    builder: (context, state) => SeeAllPage(category: _category(state)!),
   ),
 ];
+
+int? _movieId(GoRouterState state) =>
+    int.tryParse(state.pathParameters['id'] ?? '');
+
+MovieCategory? _category(GoRouterState state) =>
+    MovieCategory.values.asNameMap()[state.pathParameters['category']];
