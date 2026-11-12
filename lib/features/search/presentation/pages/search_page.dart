@@ -1,14 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/l10n/generated/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/core/di/injection.dart';
+import 'package:movie_app/features/search/presentation/bloc/search_bloc.dart';
+import 'package:movie_app/features/search/presentation/widgets/search_body.dart';
+import 'package:movie_app/features/search/presentation/widgets/search_field.dart';
 
-/// Placeholder: the search feature replaces this with the real screen.
+/// The Search tab.
+///
+/// This widget only creates the bloc; [SearchView] draws the screen.
+/// Keeping them apart lets widget tests give the view a mock bloc,
+/// without the service locator or the network.
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<SearchBloc>(),
+      child: const SearchView(),
+    );
+  }
+}
+
+/// Draws the Search screen for the [SearchBloc] above it.
+class SearchView extends StatelessWidget {
+  const SearchView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context).navSearch)),
+      appBar: AppBar(title: const SearchField()),
+      body: const SearchBody(),
     );
   }
 }
