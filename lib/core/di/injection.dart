@@ -7,6 +7,7 @@ import 'package:movie_app/core/network/dio_client.dart';
 import 'package:movie_app/core/storage/hive_boxes.dart';
 import 'package:movie_app/features/movies/movies_injection.dart';
 import 'package:movie_app/features/search/search_injection.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:movie_app/features/settings/settings_injection.dart';
 import 'package:movie_app/features/watchlist/watchlist_injection.dart';
 
@@ -20,7 +21,11 @@ final GetIt sl = GetIt.instance;
 void initDependencies() {
   sl
     ..registerLazySingleton<Dio>(
-      () => createDioClient(token: Env.tmdbToken),
+      () => createDioClient(
+        token: Env.tmdbToken,
+        // Read on every request, so a language change applies right away.
+        languageCode: () => sl<SettingsCubit>().state.locale.languageCode,
+      ),
     )
     ..registerLazySingleton<Connectivity>(Connectivity.new);
 
