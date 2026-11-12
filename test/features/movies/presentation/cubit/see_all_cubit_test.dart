@@ -242,6 +242,29 @@ void main() {
       expect(cubit.state, loadedPage1);
       await cubit.close();
     });
+
+    test(
+      'clears the load-more spinner when a refresh fails meanwhile',
+      () async {
+        // Found in review: the dropped page left `isLoadingMore: true`
+        // forever, so the spinner never stopped and loadMore was dead.
+        final page2 = Completer<Result<PaginatedMovies>>();
+        when(
+          () => repository.getMovies(MovieCategory.topRated, page: 2),
+        ).thenAnswer((_) => page2.future);
+        stubPage(1, const Err(ServerFailure(503)));
+        final cubit = buildCubit()..emit(loadedPage1);
+
+        final more = cubit.loadMore();
+        await cubit.refresh();
+        page2.complete(const Success(tPage2));
+        await more;
+
+        expect(cubit.state, loadedPage1);
+        expect((cubit.state as SeeAllLoaded).isLoadingMore, isFalse);
+        await cubit.close();
+      },
+    );
   });
 
   group('refresh', () {

@@ -42,12 +42,18 @@ class MovieSectionCubit extends Cubit<MovieSectionState> {
     await _fetch(keepMoviesOnError: true);
   }
 
+  /// Counts requests, so only the newest one may update the screen.
+  int _generation = 0;
+
   Future<void> _fetch({required bool keepMoviesOnError}) async {
+    final generation = ++_generation;
     final result = await _repository.getMovies(category);
 
-    // The user may have left the screen while we were waiting; emitting on
-    // a closed cubit throws, so stop here.
-    if (isClosed) return;
+    // Stop if the user left the screen (emitting on a closed cubit throws),
+    // or if a newer request started meanwhile: e.g. after a quick
+    // Arabic → English switch, a slow Arabic answer must not overwrite the
+    // English one.
+    if (isClosed || generation != _generation) return;
 
     switch (result) {
       case Success(:final value):

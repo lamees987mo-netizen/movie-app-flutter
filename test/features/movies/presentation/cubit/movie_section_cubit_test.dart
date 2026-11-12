@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -30,6 +32,26 @@ void main() {
 
   test('starts in the loading state', () {
     expect(buildCubit().state, const MovieSectionLoading());
+  });
+
+  test('ignores an older answer that arrives after a newer one', () async {
+    // E.g. Arabic → English quickly: the slow Arabic answer must not win.
+    const older = PaginatedMovies(movies: [tMovie1], page: 1, totalPages: 1);
+    const newer = PaginatedMovies(movies: [tMovie2], page: 1, totalPages: 1);
+    final first = Completer<Result<PaginatedMovies>>();
+    final answers = [first.future, Future.value(const Success(newer))];
+    when(
+      () => repository.getMovies(MovieCategory.trending),
+    ).thenAnswer((_) => answers.removeAt(0));
+    final cubit = buildCubit()..emit(const MovieSectionLoaded([tMovie1]));
+
+    final slow = cubit.refresh();
+    await cubit.refresh();
+    first.complete(const Success(older));
+    await slow;
+
+    expect(cubit.state, const MovieSectionLoaded([tMovie2]));
+    await cubit.close();
   });
 
   group('load', () {

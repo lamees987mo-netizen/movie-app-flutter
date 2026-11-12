@@ -61,14 +61,29 @@ class SeeAllCubit extends Cubit<SeeAllState> {
     final result = await _repository.getMovies(category);
     if (isClosed || generation != _generation) return;
 
-    if (result case Success(:final value)) {
-      emit(
-        SeeAllLoaded(
-          movies: _withoutDuplicates(const [], value.movies),
-          page: value.page,
-          hasReachedMax: value.hasReachedMax,
-        ),
-      );
+    switch (result) {
+      case Success(:final value):
+        emit(
+          SeeAllLoaded(
+            movies: _withoutDuplicates(const [], value.movies),
+            page: value.page,
+            hasReachedMax: value.hasReachedMax,
+          ),
+        );
+      case Err():
+        // Keep the grid. But a `loadMore` that was running when this
+        // refresh started has been dropped (its generation is stale), so
+        // clear its spinner; otherwise pagination would stay stuck.
+        final current = state;
+        if (current is SeeAllLoaded && current.isLoadingMore) {
+          emit(
+            SeeAllLoaded(
+              movies: current.movies,
+              page: current.page,
+              hasReachedMax: current.hasReachedMax,
+            ),
+          );
+        }
     }
   }
 
