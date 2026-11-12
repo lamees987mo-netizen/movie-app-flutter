@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/error/failures.dart';
 import 'package:movie_app/core/router/routes.dart';
 import 'package:movie_app/core/widgets/movie_poster_card.dart';
@@ -158,5 +159,33 @@ void main() {
     expect(find.text('details 1'), findsOneWidget);
     expect(openedWith?.heroTag, 'search-1');
     expect(openedWith?.movie, tMovie1);
+  });
+
+  group('SearchPage', () {
+    tearDown(() => sl.unregister<SearchBloc>());
+
+    testWidgets('gets its bloc from sl and closes it when removed', (
+      tester,
+    ) async {
+      when(() => bloc.state).thenReturn(const SearchInitial());
+      var created = 0;
+      sl.registerFactory<SearchBloc>(() {
+        created++;
+        return bloc;
+      });
+
+      await tester.pumpWidget(wrapWithApp(const SearchPage()));
+
+      expect(created, 1);
+      expect(find.byType(SearchView), findsOneWidget);
+      expect(find.text('Search movies'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextField), 'dune');
+      verify(() => bloc.add(const SearchQueryChanged('dune'))).called(1);
+
+      // The page created the bloc, so it also closes it.
+      await tester.pumpWidget(const SizedBox());
+      verify(bloc.close).called(1);
+    });
   });
 }
