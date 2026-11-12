@@ -29,7 +29,8 @@ class _HomePageState extends State<HomePage> {
   static const List<MovieCategory> _categories = [
     MovieCategory.trending,
     MovieCategory.nowPlaying,
-    // Phase 2b: MovieCategory.topRated, MovieCategory.upcoming
+    MovieCategory.topRated,
+    MovieCategory.upcoming,
   ];
 
   /// One cubit per section, created here (not in a `BlocProvider(create:)`)
