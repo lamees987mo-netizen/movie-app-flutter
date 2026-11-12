@@ -2,10 +2,14 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/error/failures.dart';
+import 'package:movie_app/features/movies/domain/entities/movie.dart';
 import 'package:movie_app/features/movies/domain/entities/movie_details.dart';
 import 'package:movie_app/features/movies/presentation/cubit/movie_details_cubit.dart';
 import 'package:movie_app/features/movies/presentation/pages/movie_details_page.dart';
+import 'package:movie_app/features/watchlist/presentation/cubit/watchlist_toggle_cubit.dart';
+import 'package:movie_app/features/watchlist/presentation/widgets/watchlist_button.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../movies_test_helpers.dart';
@@ -13,10 +17,25 @@ import '../../movies_test_helpers.dart';
 class MockMovieDetailsCubit extends MockCubit<MovieDetailsState>
     implements MovieDetailsCubit {}
 
+class MockWatchlistToggleCubit extends MockCubit<WatchlistToggleState>
+    implements WatchlistToggleCubit {}
+
 void main() {
   late MockMovieDetailsCubit cubit;
 
-  setUp(() => cubit = MockMovieDetailsCubit());
+  setUp(() {
+    cubit = MockMovieDetailsCubit();
+    // The loaded page shows a WatchlistButton, which gets its cubit from
+    // the service locator, so register a mock one.
+    sl.registerFactoryParam<WatchlistToggleCubit, Movie, void>((_, _) {
+      final toggle = MockWatchlistToggleCubit();
+      when(() => toggle.state).thenReturn(const WatchlistToggleState());
+      when(toggle.load).thenAnswer((_) async {});
+      return toggle;
+    });
+  });
+
+  tearDown(() => sl.unregister<WatchlistToggleCubit>());
 
   /// Tests [MovieDetailsView] (the body of the page) with a mock cubit, so
   /// neither the service locator nor the network is needed.
@@ -38,6 +57,15 @@ void main() {
 
     final skeletonizer = tester.widget<Skeletonizer>(findSkeletonizer);
     expect(skeletonizer.enabled, isTrue);
+    // The fake skeleton movie must never be saveable.
+    expect(find.byType(WatchlistButton), findsNothing);
+  });
+
+  testWidgets('shows the watchlist button once loaded', (tester) async {
+    await pumpView(tester, const MovieDetailsLoaded(tDetails));
+
+    expect(find.byType(WatchlistButton), findsOneWidget);
+    expect(find.text('Add to watchlist'), findsOneWidget);
   });
 
   testWidgets('shows title, info, genres, overview, cast and trailer', (

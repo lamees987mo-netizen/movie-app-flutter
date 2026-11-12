@@ -14,6 +14,7 @@ import 'package:movie_app/features/movies/presentation/widgets/details/details_a
 import 'package:movie_app/features/movies/presentation/widgets/details/details_summary.dart';
 import 'package:movie_app/features/movies/presentation/widgets/details/genre_chips.dart';
 import 'package:movie_app/features/movies/presentation/widgets/details/trailer_button.dart';
+import 'package:movie_app/features/watchlist/presentation/widgets/watchlist_button.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -130,7 +131,11 @@ class _DetailsScaffold extends StatelessWidget {
           SliverToBoxAdapter(
             child: Skeletonizer(
               enabled: isLoading,
-              child: _DetailsSections(details: details, heroTag: heroTag),
+              child: _DetailsSections(
+                details: details,
+                heroTag: heroTag,
+                isLoading: isLoading,
+              ),
             ),
           ),
         ],
@@ -140,10 +145,15 @@ class _DetailsScaffold extends StatelessWidget {
 }
 
 class _DetailsSections extends StatelessWidget {
-  const _DetailsSections({required this.details, required this.heroTag});
+  const _DetailsSections({
+    required this.details,
+    required this.heroTag,
+    required this.isLoading,
+  });
 
   final MovieDetails details;
   final Object? heroTag;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -172,9 +182,9 @@ class _DetailsSections extends StatelessWidget {
             runSpacing: AppSpacing.sm,
             children: [
               if (trailerKey != null) TrailerButton(youtubeKey: trailerKey),
-              // Phase 3: the watchlist toggle button goes here, e.g.
-              // `WatchlistButton(movie: details.movie)`, using the
-              // detailsAddToWatchlist / detailsRemoveFromWatchlist texts.
+              // Only once loaded: while loading, `details` is a fake
+              // skeleton movie, and saving it would store junk.
+              if (!isLoading) WatchlistButton(movie: details.movie),
             ],
           ),
         ),
