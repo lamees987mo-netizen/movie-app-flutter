@@ -29,8 +29,10 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<SettingsCubit>(),
+    // `.value`: the cubit is a get_it singleton (also used by Dio), so the
+    // provider must not close it.
+    return BlocProvider.value(
+      value: sl<SettingsCubit>(),
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, settings) {
           return MaterialApp.router(
