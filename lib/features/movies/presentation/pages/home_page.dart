@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   /// To add a section, add its category here; nothing else changes.
   static const List<MovieCategory> _categories = [
     MovieCategory.trending,
+    MovieCategory.nowPlaying,
     // Phase 2b: MovieCategory.topRated, MovieCategory.upcoming
   ];
 
