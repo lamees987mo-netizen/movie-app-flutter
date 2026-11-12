@@ -194,12 +194,12 @@ void main() {
       );
     });
 
-    test('a null body fails to parse instead of returning junk', () async {
+    test('a null body becomes a ServerException, not a TypeError', () async {
       answerWith(null);
 
       await expectLater(
         dataSource.getMovies(MovieCategory.trending),
-        throwsA(isA<TypeError>()),
+        throwsA(isA<ServerException>()),
       );
     });
   });

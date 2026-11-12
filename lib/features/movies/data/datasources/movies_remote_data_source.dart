@@ -57,16 +57,27 @@ class MoviesRemoteDataSourceImpl implements MoviesRemoteDataSource {
     T Function(Map<String, dynamic> json) fromJson, {
     Map<String, dynamic>? queryParameters,
   }) async {
+    final Response<Map<String, dynamic>> response;
     try {
-      final response = await _dio.get<Map<String, dynamic>>(
+      response = await _dio.get<Map<String, dynamic>>(
         path,
         queryParameters: queryParameters,
       );
-      return fromJson(response.data ?? const {});
     } on DioException catch (e) {
       final error = e.error;
       if (error is AppException) throw error;
       throw ServerException(statusCode: e.response?.statusCode);
+    }
+
+    // An empty or unexpected body is the server's fault. Turn the parsing
+    // error into a ServerException, so this class only throws AppExceptions.
+    try {
+      return fromJson(response.data ?? const {});
+    } on Object catch (error) {
+      throw ServerException(
+        statusCode: response.statusCode,
+        message: 'Unexpected response: $error',
+      );
     }
   }
 }
