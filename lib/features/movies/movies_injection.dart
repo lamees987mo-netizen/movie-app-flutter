@@ -7,6 +7,7 @@ import 'package:movie_app/features/movies/domain/repositories/movies_repository.
 import 'package:movie_app/features/movies/domain/usecases/get_movie_details.dart';
 import 'package:movie_app/features/movies/presentation/cubit/movie_details_cubit.dart';
 import 'package:movie_app/features/movies/presentation/cubit/movie_section_cubit.dart';
+import 'package:movie_app/features/movies/presentation/cubit/see_all_cubit.dart';
 
 void registerMoviesDependencies(GetIt sl) {
   // Data and domain: one shared instance, created on first use.
@@ -25,6 +26,12 @@ void registerMoviesDependencies(GetIt sl) {
     // value: `sl<MovieSectionCubit>(param1: MovieCategory.trending)`.
     ..registerFactoryParam<MovieSectionCubit, MovieCategory, void>(
       (category, _) => MovieSectionCubit(
+        category: category,
+        repository: sl<MoviesRepository>(),
+      ),
+    )
+    ..registerFactoryParam<SeeAllCubit, MovieCategory, void>(
+      (category, _) => SeeAllCubit(
         category: category,
         repository: sl<MoviesRepository>(),
       ),
