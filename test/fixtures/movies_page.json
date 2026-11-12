@@ -1,0 +1,41 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "adult": false,
+      "backdrop_path": "/tElnmtQ6yz1PjN1kePNl8yMSb59.jpg",
+      "id": 1022789,
+      "title": "Inside Out 2",
+      "original_language": "en",
+      "original_title": "Inside Out 2",
+      "overview": "Teenager Riley's mind headquarters is undergoing a sudden demolition to make room for something entirely unexpected: new Emotions!",
+      "poster_path": "/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg",
+      "media_type": "movie",
+      "genre_ids": [16, 10751, 12, 35, 18],
+      "popularity": 4219.917,
+      "release_date": "2024-06-11",
+      "video": false,
+      "vote_average": 7.7,
+      "vote_count": 2181
+    },
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "id": 1311031,
+      "title": "Untitled Upcoming Movie",
+      "original_language": "en",
+      "original_title": "Untitled Upcoming Movie",
+      "overview": "",
+      "poster_path": null,
+      "media_type": "movie",
+      "genre_ids": [],
+      "popularity": 12.3,
+      "release_date": "",
+      "video": false,
+      "vote_average": 0,
+      "vote_count": 0
+    }
+  ],
+  "total_pages": 500,
+  "total_results": 10000
+}

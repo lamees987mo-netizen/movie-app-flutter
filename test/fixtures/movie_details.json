@@ -1,0 +1,99 @@
+{
+  "adult": false,
+  "backdrop_path": "/tElnmtQ6yz1PjN1kePNl8yMSb59.jpg",
+  "budget": 200000000,
+  "genres": [
+    { "id": 16, "name": "Animation" },
+    { "id": 10751, "name": "Family" }
+  ],
+  "homepage": "https://movies.disney.com/inside-out-2",
+  "id": 1022789,
+  "imdb_id": "tt22022452",
+  "original_language": "en",
+  "original_title": "Inside Out 2",
+  "overview": "Teenager Riley's mind headquarters is undergoing a sudden demolition to make room for something entirely unexpected: new Emotions!",
+  "popularity": 4219.917,
+  "poster_path": "/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg",
+  "release_date": "2024-06-11",
+  "revenue": 1462549890,
+  "runtime": 97,
+  "status": "Released",
+  "tagline": "Make room for new emotions.",
+  "title": "Inside Out 2",
+  "video": false,
+  "vote_average": 7.6,
+  "vote_count": 2350,
+  "credits": {
+    "cast": [
+      {
+        "adult": false,
+        "gender": 1,
+        "id": 56322,
+        "known_for_department": "Acting",
+        "name": "Amy Poehler",
+        "original_name": "Amy Poehler",
+        "popularity": 25.1,
+        "profile_path": "/rwmvRmXlUxTMjxDDBFNKrcFsNN2.jpg",
+        "cast_id": 2,
+        "character": "Joy (voice)",
+        "credit_id": "6327c36f4b4910007f9b4a0d",
+        "order": 0
+      },
+      {
+        "adult": false,
+        "gender": 1,
+        "id": 1903874,
+        "known_for_department": "Acting",
+        "name": "Maya Hawke",
+        "original_name": "Maya Hawke",
+        "popularity": 30.2,
+        "profile_path": null,
+        "cast_id": 10,
+        "character": "Anxiety (voice)",
+        "credit_id": "64fb3a1ae0ca7f00c4f0e1b3",
+        "order": 1
+      }
+    ],
+    "crew": []
+  },
+  "videos": {
+    "results": [
+      {
+        "iso_639_1": "en",
+        "iso_3166_1": "US",
+        "name": "Behind the scenes",
+        "key": "featurette123",
+        "site": "YouTube",
+        "size": 1080,
+        "type": "Featurette",
+        "official": true,
+        "published_at": "2024-06-01T16:00:00.000Z",
+        "id": "665b1f0a0e6c8b8a0c5f1a01"
+      },
+      {
+        "iso_639_1": "en",
+        "iso_3166_1": "US",
+        "name": "Fan-made Trailer",
+        "key": "fanTrailer456",
+        "site": "YouTube",
+        "size": 1080,
+        "type": "Trailer",
+        "official": false,
+        "published_at": "2024-03-01T16:00:00.000Z",
+        "id": "665b1f0a0e6c8b8a0c5f1a02"
+      },
+      {
+        "iso_639_1": "en",
+        "iso_3166_1": "US",
+        "name": "Official Trailer",
+        "key": "LEjhY15eCx0",
+        "site": "YouTube",
+        "size": 1080,
+        "type": "Trailer",
+        "official": true,
+        "published_at": "2024-03-07T16:00:00.000Z",
+        "id": "65e9f1a2c2b9df0163a8b6b1"
+      }
+    ]
+  }
+}
