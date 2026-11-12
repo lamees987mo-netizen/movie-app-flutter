@@ -7,6 +7,8 @@ import 'package:movie_app/core/theme/app_theme.dart';
 import 'package:movie_app/features/movies/domain/entities/movie_category.dart';
 import 'package:movie_app/features/movies/presentation/cubit/movie_section_cubit.dart';
 import 'package:movie_app/features/movies/presentation/widgets/movie_section.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
 
 /// The Home tab: a vertical list of [MovieSection]s.
@@ -62,24 +64,30 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context).appTitle)),
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        child: ListView.separated(
-          // Lets the user pull to refresh even when the content is short.
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsetsDirectional.symmetric(
-            vertical: AppSpacing.md,
+      // TMDB returns titles in the app's language (LanguageInterceptor), so
+      // when the language changes, reload what is already on screen.
+      body: BlocListener<SettingsCubit, SettingsState>(
+        listenWhen: (previous, current) => previous.locale != current.locale,
+        listener: (context, _) => unawaited(_refresh()),
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: ListView.separated(
+            // Lets the user pull to refresh even when the content is short.
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsetsDirectional.symmetric(
+              vertical: AppSpacing.md,
+            ),
+            itemCount: _cubits.length,
+            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
+            itemBuilder: (context, index) {
+              final cubit = _cubits[index];
+              // `.value` because this State, not the provider, owns the cubit.
+              return BlocProvider.value(
+                value: cubit,
+                child: MovieSection(category: cubit.category),
+              );
+            },
           ),
-          itemCount: _cubits.length,
-          separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.lg),
-          itemBuilder: (context, index) {
-            final cubit = _cubits[index];
-            // `.value` because this State, not the provider, owns the cubit.
-            return BlocProvider.value(
-              value: cubit,
-              child: MovieSection(category: cubit.category),
-            );
-          },
         ),
       ),
     );
