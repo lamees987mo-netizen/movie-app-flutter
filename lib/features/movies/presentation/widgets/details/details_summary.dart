@@ -52,7 +52,7 @@ class DetailsSummary extends StatelessWidget {
                   icon: Icons.calendar_today_outlined,
                   text: MaterialLocalizations.of(
                     context,
-                  ).formatMediumDate(releaseDate),
+                  ).formatFullDate(releaseDate),
                   semanticLabel: l10n.detailsReleaseDate,
                 ),
               if (runtime != null && runtime > 0)

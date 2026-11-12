@@ -12,8 +12,16 @@ class DetailsAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return SliverAppBar(
       pinned: true,
+      // A translucent circle keeps the back arrow readable on any backdrop,
+      // including very dark or very light images.
+      leading: BackButton(
+        style: IconButton.styleFrom(
+          backgroundColor: colors.surface.withValues(alpha: 0.7),
+        ),
+      ),
       expandedHeight: _expandedHeight,
       flexibleSpace: FlexibleSpaceBar(
         background: NetworkImageOrPlaceholder(
