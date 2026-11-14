@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/core/network/image_url.dart';
 import 'package:movie_app/core/theme/app_theme.dart';
 import 'package:movie_app/features/movies/domain/entities/movie_details.dart';
+import 'package:movie_app/features/person/presentation/navigation/person_args.dart';
 
-/// A horizontal list of actors: photo, name and character.
+/// A horizontal list of actors: photo, name and character. Tapping one
+/// opens their page.
 class CastList extends StatelessWidget {
   const CastList({required this.cast, super.key});
 
@@ -42,33 +44,42 @@ class _CastTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final photoUrl = ImageUrl.profile(member.profilePath);
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 36,
-          backgroundImage: photoUrl == null
-              ? null
-              : CachedNetworkImageProvider(photoUrl),
-          child: photoUrl == null ? const Icon(Icons.person) : null,
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          member.name,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.labelLarge,
-        ),
-        Text(
-          member.character,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppSpacing.sm),
+      // Name and photo go along, so the person page shows them at once.
+      onTap: () => context.pushPerson(
+        member.id,
+        name: member.name,
+        profilePath: member.profilePath,
+      ),
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 36,
+            backgroundImage: photoUrl == null
+                ? null
+                : CachedNetworkImageProvider(photoUrl),
+            child: photoUrl == null ? const Icon(Icons.person) : null,
           ),
-        ),
-      ],
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            member.name,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelLarge,
+          ),
+          Text(
+            member.character,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
