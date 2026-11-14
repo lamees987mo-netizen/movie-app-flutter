@@ -14,11 +14,17 @@ class LanguageInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // `putIfAbsent`: a request that sets its own language keeps it.
-    options.queryParameters.putIfAbsent(
-      'language',
-      () => _languageCode() == 'ar' ? 'ar' : 'en-US',
-    );
+    final isArabic = _languageCode() == 'ar';
+    // `putIfAbsent`: a request that sets its own values keeps them.
+    options.queryParameters
+      ..putIfAbsent('language', () => isArabic ? 'ar' : 'en-US')
+      // Without this, TMDB returns only videos in `language`, and almost no
+      // movie has an Arabic trailer, so the Arabic app showed no "Play
+      // trailer" button. Fall back to English (and language-less) videos.
+      ..putIfAbsent(
+        'include_video_language',
+        () => isArabic ? 'ar,en,null' : 'en,null',
+      );
     handler.next(options);
   }
 }

@@ -37,6 +37,16 @@ void main() {
     expect(run(interceptor)['language'], 'ar');
   });
 
+  test('Arabic also accepts English videos, so trailers still show', () {
+    final query = run(LanguageInterceptor(() => 'ar'));
+    expect(query['include_video_language'], 'ar,en,null');
+  });
+
+  test('English only asks for English videos', () {
+    final query = run(LanguageInterceptor(() => 'en'));
+    expect(query['include_video_language'], 'en,null');
+  });
+
   test('keeps a language the request already set', () {
     final query = run(
       LanguageInterceptor(() => 'ar'),
