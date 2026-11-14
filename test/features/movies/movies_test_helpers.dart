@@ -34,7 +34,7 @@ const tDetails = MovieDetails(
   movie: tMovie1,
   runtime: 97,
   genres: ['Animation', 'Family'],
-  cast: [CastMember(name: 'Amy Poehler', character: 'Joy (voice)')],
+  cast: [CastMember(id: 56322, name: 'Amy Poehler', character: 'Joy (voice)')],
   trailerYoutubeKey: 'abc123',
 );
 

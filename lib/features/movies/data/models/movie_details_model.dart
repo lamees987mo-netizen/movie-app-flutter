@@ -1,10 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:movie_app/features/movies/data/models/movie_model.dart';
 import 'package:movie_app/features/movies/domain/entities/movie.dart';
 import 'package:movie_app/features/movies/domain/entities/movie_details.dart';
 
 part 'movie_details_model.g.dart';
 
-/// Response of `movie/{id}?append_to_response=credits,videos`.
+/// Response of `movie/{id}?append_to_response=credits,videos,similar`.
 @JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
 class MovieDetailsModel {
   const MovieDetailsModel({
@@ -15,6 +16,7 @@ class MovieDetailsModel {
     required this.genres,
     required this.cast,
     required this.videos,
+    this.similar = const [],
     this.posterPath,
     this.backdropPath,
     this.releaseDate,
@@ -46,11 +48,18 @@ class MovieDetailsModel {
   @JsonKey(readValue: _readVideos, defaultValue: <VideoModel>[])
   final List<VideoModel> videos;
 
+  /// Read from the nested `similar.results` list (TMDB's first page).
+  @JsonKey(readValue: _readSimilar, defaultValue: <MovieModel>[])
+  final List<MovieModel> similar;
+
   static Object? _readCast(Map<dynamic, dynamic> json, String key) =>
       (json['credits'] as Map<String, dynamic>?)?['cast'];
 
   static Object? _readVideos(Map<dynamic, dynamic> json, String key) =>
       (json['videos'] as Map<String, dynamic>?)?['results'];
+
+  static Object? _readSimilar(Map<dynamic, dynamic> json, String key) =>
+      (json['similar'] as Map<String, dynamic>?)?['results'];
 
   /// The YouTube key of the best trailer: an official one if available,
   /// otherwise the first trailer, otherwise `null`.
@@ -76,6 +85,7 @@ class MovieDetailsModel {
     genres: genres.map((genre) => genre.name).toList(),
     cast: cast.map((member) => member.toEntity()).toList(),
     trailerYoutubeKey: trailerYoutubeKey,
+    similar: similar.map((movie) => movie.toEntity()).toList(),
   );
 }
 
@@ -93,6 +103,7 @@ class GenreModel {
 @JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
 class CastMemberModel {
   const CastMemberModel({
+    required this.id,
     required this.name,
     required this.character,
     this.profilePath,
@@ -101,12 +112,15 @@ class CastMemberModel {
   factory CastMemberModel.fromJson(Map<String, dynamic> json) =>
       _$CastMemberModelFromJson(json);
 
+  /// The person's TMDB id (not the `cast_id`, which is per movie).
+  final int id;
   final String name;
   @JsonKey(defaultValue: '')
   final String character;
   final String? profilePath;
 
   CastMember toEntity() => CastMember(
+    id: id,
     name: name,
     character: character,
     profilePath: profilePath,

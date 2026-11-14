@@ -86,12 +86,28 @@ void main() {
     test('parses the cast from credits', () {
       expect(details.cast, const [
         CastMember(
+          id: 56322,
           name: 'Amy Poehler',
           character: 'Joy (voice)',
           profilePath: '/rwmvRmXlUxTMjxDDBFNKrcFsNN2.jpg',
         ),
-        CastMember(name: 'Maya Hawke', character: 'Anxiety (voice)'),
+        CastMember(
+          id: 1903874,
+          name: 'Maya Hawke',
+          character: 'Anxiety (voice)',
+        ),
       ]);
+    });
+
+    test('parses similar movies from similar.results', () {
+      expect(details.similar.map((movie) => movie.id), [150540, 508947]);
+
+      final first = details.similar.first;
+      expect(first.title, 'Inside Out');
+      expect(first.posterPath, '/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg');
+      expect(first.releaseDate, DateTime(2015, 6, 17));
+      // An empty release date from TMDB becomes null, not a crash.
+      expect(details.similar.last.releaseDate, isNull);
     });
 
     test('picks the official YouTube trailer', () {
@@ -109,15 +125,17 @@ void main() {
       expect(model.trailerYoutubeKey, 'fanTrailer456');
     });
 
-    test('has no trailer and empty cast when sections are missing', () {
+    test('has no trailer, cast or similar when sections are missing', () {
       final json = jsonFixture('movie_details.json')
         ..remove('videos')
-        ..remove('credits');
+        ..remove('credits')
+        ..remove('similar');
 
       final result = MovieDetailsModel.fromJson(json).toEntity();
 
       expect(result.trailerYoutubeKey, isNull);
       expect(result.cast, isEmpty);
+      expect(result.similar, isEmpty);
     });
   });
 }

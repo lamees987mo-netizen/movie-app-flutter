@@ -27,6 +27,11 @@ MovieDetailsModel _$MovieDetailsModelFromJson(Map<String, dynamic> json) =>
               ?.map((e) => VideoModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      similar:
+          (MovieDetailsModel._readSimilar(json, 'similar') as List<dynamic>?)
+              ?.map((e) => MovieModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       posterPath: json['poster_path'] as String?,
       backdropPath: json['backdrop_path'] as String?,
       releaseDate: json['release_date'] as String?,
@@ -38,6 +43,7 @@ GenreModel _$GenreModelFromJson(Map<String, dynamic> json) =>
 
 CastMemberModel _$CastMemberModelFromJson(Map<String, dynamic> json) =>
     CastMemberModel(
+      id: (json['id'] as num).toInt(),
       name: json['name'] as String,
       character: json['character'] as String? ?? '',
       profilePath: json['profile_path'] as String?,

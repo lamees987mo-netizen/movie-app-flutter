@@ -107,7 +107,7 @@ void main() {
   });
 
   group('getMovieDetails', () {
-    test('calls movie/{id} and appends credits and videos', () async {
+    test('calls movie/{id} and appends credits, videos and similar', () async {
       answerWith(jsonFixture('movie_details.json'));
 
       await dataSource.getMovieDetails(1022789);
@@ -115,7 +115,7 @@ void main() {
       verify(
         () => dio.get<Map<String, dynamic>>(
           'movie/1022789',
-          queryParameters: {'append_to_response': 'credits,videos'},
+          queryParameters: {'append_to_response': 'credits,videos,similar'},
         ),
       ).called(1);
     });
