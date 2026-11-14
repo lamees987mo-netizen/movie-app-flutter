@@ -6,6 +6,7 @@ import 'package:movie_app/core/config/env.dart';
 import 'package:movie_app/core/network/dio_client.dart';
 import 'package:movie_app/core/storage/hive_boxes.dart';
 import 'package:movie_app/features/movies/movies_injection.dart';
+import 'package:movie_app/features/person/person_injection.dart';
 import 'package:movie_app/features/search/search_injection.dart';
 import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:movie_app/features/settings/settings_injection.dart';
@@ -42,6 +43,7 @@ void initDependencies() {
   }
 
   registerMoviesDependencies(sl);
+  registerPersonDependencies(sl);
   registerSearchDependencies(sl);
   registerWatchlistDependencies(sl);
   registerSettingsDependencies(sl);

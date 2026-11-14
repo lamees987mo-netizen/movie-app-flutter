@@ -4,6 +4,7 @@ import 'package:movie_app/core/router/app_shell.dart';
 import 'package:movie_app/core/router/routes.dart';
 import 'package:movie_app/core/widgets/error_view.dart';
 import 'package:movie_app/features/movies/movies_routes.dart';
+import 'package:movie_app/features/person/person_routes.dart';
 import 'package:movie_app/features/search/search_routes.dart';
 import 'package:movie_app/features/settings/settings_routes.dart';
 import 'package:movie_app/features/watchlist/watchlist_routes.dart';
@@ -31,6 +32,7 @@ GoRouter createAppRouter() {
         branches: [moviesBranch, searchBranch, watchlistBranch, settingsBranch],
       ),
       ...moviesRoutes,
+      ...personRoutes,
       ...searchRoutes,
       ...watchlistRoutes,
       ...settingsRoutes,

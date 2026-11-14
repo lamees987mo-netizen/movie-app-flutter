@@ -7,11 +7,14 @@ abstract final class Routes {
   static const String search = '/search';
   static const String watchlist = '/watchlist';
   static const String settings = '/settings';
+  static const String person = '/person/:id';
 
   static String movieDetailsPath(int movieId) => '/movie/$movieId';
 
   /// [categoryName] is a `MovieCategory.name`, e.g. `topRated`.
   static String seeAllPath(String categoryName) => '/see-all/$categoryName';
+
+  static String personPath(int personId) => '/person/$personId';
 }
 
 /// Route names, for `context.goNamed` / `context.pushNamed`.
@@ -22,4 +25,5 @@ abstract final class RouteNames {
   static const String search = 'search';
   static const String watchlist = 'watchlist';
   static const String settings = 'settings';
+  static const String person = 'person';
 }
