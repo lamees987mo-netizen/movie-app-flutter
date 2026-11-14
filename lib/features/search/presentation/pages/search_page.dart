@@ -4,6 +4,8 @@ import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/features/search/presentation/bloc/search_bloc.dart';
 import 'package:movie_app/features/search/presentation/widgets/search_body.dart';
 import 'package:movie_app/features/search/presentation/widgets/search_field.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
 
 /// The Search tab.
 ///
@@ -17,7 +19,14 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<SearchBloc>(),
-      child: const SearchView(),
+      // TMDB returns titles in the app's language, so search again when
+      // the language changes (like Home and "See all" reload).
+      child: BlocListener<SettingsCubit, SettingsState>(
+        listenWhen: (previous, current) => previous.locale != current.locale,
+        listener: (context, _) =>
+            context.read<SearchBloc>().add(const SearchLanguageChanged()),
+        child: const SearchView(),
+      ),
     );
   }
 }
