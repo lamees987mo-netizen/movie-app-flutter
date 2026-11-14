@@ -31,6 +31,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(MovieCategory.trending);
     registerFallbackValue(pageModel);
+    registerFallbackValue(detailsModel);
   });
 
   setUp(() {
@@ -48,6 +49,12 @@ void main() {
     when(() => localDataSource.getCachedFirstPage(any(), any())).thenReturn(
       null,
     );
+    when(
+      () => localDataSource.cacheMovieDetails(any(), any()),
+    ).thenAnswer((_) async {});
+    when(
+      () => localDataSource.getCachedMovieDetails(any(), any()),
+    ).thenReturn(null);
   });
 
   group('getMovies offline cache', () {
@@ -103,7 +110,7 @@ void main() {
 
       final result = await repository.getMovies(MovieCategory.upcoming);
 
-      expect(result, Success(pageModel.toEntity()));
+      expect(result, Success(pageModel.toEntity(isFromCache: true)));
     });
 
     test('reads the cache of the current language', () async {
@@ -235,6 +242,102 @@ void main() {
       final result = await repository.getMovieDetails(0);
 
       expect((result as Err).failure, const NotFoundFailure());
+    });
+
+    test('keeps a 401 (bad token) as ServerFailure(401)', () async {
+      when(
+        () => dataSource.getMovieDetails(any()),
+      ).thenThrow(const ServerException(statusCode: 401));
+
+      final result = await repository.getMovieDetails(1);
+
+      expect((result as Err).failure, const ServerFailure(401));
+    });
+  });
+
+  group('getMovieDetails offline cache', () {
+    void goOffline() => when(
+      () => dataSource.getMovieDetails(any()),
+    ).thenThrow(const NetworkException());
+
+    test('saves the details with the current language', () async {
+      languageCode = 'ar';
+      when(
+        () => dataSource.getMovieDetails(1022789),
+      ).thenAnswer((_) async => detailsModel);
+
+      await repository.getMovieDetails(1022789);
+
+      verify(
+        () => localDataSource.cacheMovieDetails('ar', detailsModel),
+      ).called(1);
+    });
+
+    test('still succeeds when saving fails', () async {
+      when(
+        () => dataSource.getMovieDetails(any()),
+      ).thenAnswer((_) async => detailsModel);
+      when(
+        () => localDataSource.cacheMovieDetails(any(), any()),
+      ).thenThrow(const CacheException());
+
+      final result = await repository.getMovieDetails(1022789);
+
+      expect(result, Success(detailsModel.toEntity()));
+    });
+
+    test('returns the saved details when offline', () async {
+      goOffline();
+      when(
+        () => localDataSource.getCachedMovieDetails(1022789, 'en'),
+      ).thenReturn(detailsModel);
+
+      final result = await repository.getMovieDetails(1022789);
+
+      expect(result, Success(detailsModel.toEntity()));
+    });
+
+    test('reads the saved details of the current language', () async {
+      goOffline();
+      languageCode = 'ar';
+
+      await repository.getMovieDetails(1022789);
+
+      verify(
+        () => localDataSource.getCachedMovieDetails(1022789, 'ar'),
+      ).called(1);
+    });
+
+    test('returns NetworkFailure when offline with nothing saved', () async {
+      goOffline();
+
+      final result = await repository.getMovieDetails(1022789);
+
+      expect((result as Err).failure, const NetworkFailure());
+    });
+
+    test('returns NetworkFailure when the cache cannot be read', () async {
+      goOffline();
+      when(
+        () => localDataSource.getCachedMovieDetails(any(), any()),
+      ).thenThrow(const CacheException());
+
+      final result = await repository.getMovieDetails(1022789);
+
+      expect((result as Err).failure, const NetworkFailure());
+    });
+
+    test('does not use the cache for server errors', () async {
+      when(
+        () => dataSource.getMovieDetails(any()),
+      ).thenThrow(const ServerException(statusCode: 500));
+      when(
+        () => localDataSource.getCachedMovieDetails(any(), any()),
+      ).thenReturn(detailsModel);
+
+      final result = await repository.getMovieDetails(1022789);
+
+      expect((result as Err).failure, const ServerFailure(500));
     });
   });
 

@@ -33,8 +33,26 @@ MovieDetailsModel _$MovieDetailsModelFromJson(Map<String, dynamic> json) =>
       runtime: (json['runtime'] as num?)?.toInt(),
     );
 
+Map<String, dynamic> _$MovieDetailsModelToJson(MovieDetailsModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'title': instance.title,
+      'overview': instance.overview,
+      'poster_path': instance.posterPath,
+      'backdrop_path': instance.backdropPath,
+      'vote_average': instance.voteAverage,
+      'release_date': instance.releaseDate,
+      'runtime': instance.runtime,
+      'genres': instance.genres.map((e) => e.toJson()).toList(),
+      'cast': instance.cast.map((e) => e.toJson()).toList(),
+      'videos': instance.videos.map((e) => e.toJson()).toList(),
+    };
+
 GenreModel _$GenreModelFromJson(Map<String, dynamic> json) =>
     GenreModel(id: (json['id'] as num).toInt(), name: json['name'] as String);
+
+Map<String, dynamic> _$GenreModelToJson(GenreModel instance) =>
+    <String, dynamic>{'id': instance.id, 'name': instance.name};
 
 CastMemberModel _$CastMemberModelFromJson(Map<String, dynamic> json) =>
     CastMemberModel(
@@ -43,9 +61,24 @@ CastMemberModel _$CastMemberModelFromJson(Map<String, dynamic> json) =>
       profilePath: json['profile_path'] as String?,
     );
 
+Map<String, dynamic> _$CastMemberModelToJson(CastMemberModel instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'character': instance.character,
+      'profile_path': instance.profilePath,
+    };
+
 VideoModel _$VideoModelFromJson(Map<String, dynamic> json) => VideoModel(
   key: json['key'] as String,
   site: json['site'] as String,
   type: json['type'] as String,
   official: json['official'] as bool? ?? false,
 );
+
+Map<String, dynamic> _$VideoModelToJson(VideoModel instance) =>
+    <String, dynamic>{
+      'key': instance.key,
+      'site': instance.site,
+      'type': instance.type,
+      'official': instance.official,
+    };
