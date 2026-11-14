@@ -65,6 +65,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonEmpty => 'Nothing here yet.';
 
   @override
+  String get commonShowMore => 'Show more';
+
+  @override
+  String get commonShowLess => 'Show less';
+
+  @override
   String get detailsOverview => 'Overview';
 
   @override
@@ -89,6 +95,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get detailsRemoveFromWatchlist => 'Remove from watchlist';
+
+  @override
+  String get detailsSimilar => 'Similar movies';
+
+  @override
+  String get personBiography => 'Biography';
+
+  @override
+  String get personNoBiography => 'No biography available.';
+
+  @override
+  String get personKnownFor => 'Known for';
+
+  @override
+  String personBorn(String date) {
+    return 'Born $date';
+  }
+
+  @override
+  String get personPlaceOfBirth => 'Place of birth';
 
   @override
   String get searchHint => 'Search movies';

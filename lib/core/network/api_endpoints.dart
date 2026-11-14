@@ -12,6 +12,12 @@ abstract final class ApiEndpoints {
 
   static String movieDetails(int movieId) => 'movie/$movieId';
 
-  /// Lets one details request also return the cast and the videos.
-  static const String detailsAppendToResponse = 'credits,videos';
+  /// Lets one details request also return the cast, the videos and the
+  /// similar movies.
+  static const String detailsAppendToResponse = 'credits,videos,similar';
+
+  static String personDetails(int personId) => 'person/$personId';
+
+  /// Lets one person request also return the movies they acted in.
+  static const String personAppendToResponse = 'movie_credits';
 }

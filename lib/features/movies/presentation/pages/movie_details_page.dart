@@ -13,6 +13,7 @@ import 'package:movie_app/features/movies/presentation/widgets/details/cast_list
 import 'package:movie_app/features/movies/presentation/widgets/details/details_app_bar.dart';
 import 'package:movie_app/features/movies/presentation/widgets/details/details_summary.dart';
 import 'package:movie_app/features/movies/presentation/widgets/details/genre_chips.dart';
+import 'package:movie_app/features/movies/presentation/widgets/details/similar_movies.dart';
 import 'package:movie_app/features/movies/presentation/widgets/details/trailer_button.dart';
 import 'package:movie_app/features/watchlist/presentation/widgets/watchlist_button.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
@@ -102,7 +103,12 @@ class MovieDetailsView extends StatelessWidget {
     genres: const ['Genre', 'Genre', 'Genre'],
     cast: List.filled(
       5,
-      const CastMember(name: 'Actor name', character: 'Character'),
+      const CastMember(id: 0, name: 'Actor name', character: 'Character'),
+    ),
+    // Negative ids so they never clash with a real movie.
+    similar: List.generate(
+      6,
+      (index) => Movie(id: -1 - index, title: '', overview: '', voteAverage: 0),
     ),
   );
 }
@@ -155,54 +161,131 @@ class _DetailsSections extends StatelessWidget {
   final Object? heroTag;
   final bool isLoading;
 
+  /// From this width on (tablets, phones in landscape) the summary and the
+  /// overview sit side by side.
+  static const double _wideBreakpoint = 700;
+
+  /// Keeps lines short enough to read on very wide screens.
+  static const double _maxContentWidth = 1000;
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final overview = details.movie.overview;
-    final trailerKey = details.trailerYoutubeKey;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsetsDirectional.all(AppSpacing.md),
-          child: DetailsSummary(details: details, heroTag: heroTag),
-        ),
-        if (details.genres.isNotEmpty)
-          Padding(
-            padding: const EdgeInsetsDirectional.symmetric(
-              horizontal: AppSpacing.md,
-            ),
-            child: GenreChips(genres: details.genres),
-          ),
-        Padding(
-          padding: const EdgeInsetsDirectional.all(AppSpacing.md),
-          child: Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < _wideBreakpoint) {
+          // Phone: everything in one column.
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (trailerKey != null) TrailerButton(youtubeKey: trailerKey),
-              // Only once loaded: while loading, `details` is a fake
-              // skeleton movie, and saving it would store junk.
-              if (!isLoading) WatchlistButton(movie: details.movie),
+              ..._summary(context),
+              ..._overview(context),
+              ..._lists(context),
             ],
+          );
+        }
+
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: _summary(context),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        // Lines the title up with the top of the poster.
+                        padding: const EdgeInsetsDirectional.only(
+                          top: AppSpacing.md,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: _overview(context),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                ..._lists(context),
+              ],
+            ),
           ),
-        ),
-        _SectionTitle(l10n.detailsOverview),
+        );
+      },
+    );
+  }
+
+  /// Poster and info, genres, and the trailer / watchlist buttons.
+  List<Widget> _summary(BuildContext context) {
+    final trailerKey = details.trailerYoutubeKey;
+    return [
+      Padding(
+        padding: const EdgeInsetsDirectional.all(AppSpacing.md),
+        child: DetailsSummary(details: details, heroTag: heroTag),
+      ),
+      if (details.genres.isNotEmpty)
         Padding(
           padding: const EdgeInsetsDirectional.symmetric(
             horizontal: AppSpacing.md,
           ),
-          child: Text(overview.isEmpty ? l10n.detailsNoOverview : overview),
+          child: GenreChips(genres: details.genres),
         ),
-        if (details.cast.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.md),
-          _SectionTitle(l10n.detailsCast),
-          CastList(cast: details.cast),
-        ],
-        const SizedBox(height: AppSpacing.lg),
+      Padding(
+        padding: const EdgeInsetsDirectional.all(AppSpacing.md),
+        child: Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
+          children: [
+            if (trailerKey != null) TrailerButton(youtubeKey: trailerKey),
+            // Only once loaded: while loading, `details` is a fake
+            // skeleton movie, and saving it would store junk.
+            if (!isLoading) WatchlistButton(movie: details.movie),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _overview(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final overview = details.movie.overview;
+    return [
+      _SectionTitle(l10n.detailsOverview),
+      Padding(
+        padding: const EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.md,
+        ),
+        child: Text(overview.isEmpty ? l10n.detailsNoOverview : overview),
+      ),
+    ];
+  }
+
+  /// The horizontal rows at the bottom: cast and similar movies.
+  List<Widget> _lists(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return [
+      if (details.cast.isNotEmpty) ...[
+        const SizedBox(height: AppSpacing.md),
+        _SectionTitle(l10n.detailsCast),
+        CastList(cast: details.cast),
       ],
-    );
+      if (details.similar.isNotEmpty) ...[
+        const SizedBox(height: AppSpacing.md),
+        _SectionTitle(l10n.detailsSimilar),
+        SimilarMovies(
+          movies: details.similar,
+          parentMovieId: details.movie.id,
+        ),
+      ],
+      const SizedBox(height: AppSpacing.lg),
+    ];
   }
 }
 

@@ -22,6 +22,8 @@
   "commonCacheError": "تعذّرت قراءة البيانات المحفوظة على الجهاز.",
   "commonOfflineBanner": "أنت غير متصل. يتم عرض المحتوى المحفوظ.",
   "commonEmpty": "لا يوجد شيء هنا بعد.",
+  "commonShowMore": "عرض المزيد",
+  "commonShowLess": "عرض أقل",
 
   "detailsOverview": "القصة",
   "detailsCast": "طاقم التمثيل",
@@ -31,6 +33,13 @@
   "detailsNoOverview": "لا يوجد وصف متاح.",
   "detailsAddToWatchlist": "أضف إلى قائمة المشاهدة",
   "detailsRemoveFromWatchlist": "إزالة من قائمة المشاهدة",
+  "detailsSimilar": "أفلام مشابهة",
+
+  "personBiography": "السيرة الذاتية",
+  "personNoBiography": "لا توجد سيرة ذاتية متاحة.",
+  "personKnownFor": "أبرز الأعمال",
+  "personBorn": "تاريخ الميلاد: {date}",
+  "personPlaceOfBirth": "مكان الميلاد",
 
   "searchHint": "ابحث عن فيلم",
   "searchEmptyQuery": "اكتب اسم فيلم لبدء البحث.",

@@ -12,6 +12,7 @@ class MovieDetails extends Equatable {
     this.genres = const [],
     this.cast = const [],
     this.trailerYoutubeKey,
+    this.similar = const [],
   });
 
   final Movie movie;
@@ -26,17 +27,30 @@ class MovieDetails extends Equatable {
   /// YouTube video id: open `https://www.youtube.com/watch?v=<key>`.
   final String? trailerYoutubeKey;
 
+  /// Movies TMDB considers similar to this one; empty when there are none.
+  final List<Movie> similar;
+
   @override
-  List<Object?> get props => [movie, runtime, genres, cast, trailerYoutubeKey];
+  List<Object?> get props => [
+    movie,
+    runtime,
+    genres,
+    cast,
+    trailerYoutubeKey,
+    similar,
+  ];
 }
 
 class CastMember extends Equatable {
   const CastMember({
+    required this.id,
     required this.name,
     required this.character,
     this.profilePath,
   });
 
+  /// The person's TMDB id, used to open their page (`/person/:id`).
+  final int id;
   final String name;
   final String character;
 
@@ -44,5 +58,5 @@ class CastMember extends Equatable {
   final String? profilePath;
 
   @override
-  List<Object?> get props => [name, character, profilePath];
+  List<Object?> get props => [id, name, character, profilePath];
 }

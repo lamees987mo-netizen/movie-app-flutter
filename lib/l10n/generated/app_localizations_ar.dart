@@ -64,6 +64,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get commonEmpty => 'لا يوجد شيء هنا بعد.';
 
   @override
+  String get commonShowMore => 'عرض المزيد';
+
+  @override
+  String get commonShowLess => 'عرض أقل';
+
+  @override
   String get detailsOverview => 'القصة';
 
   @override
@@ -96,6 +102,26 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get detailsRemoveFromWatchlist => 'إزالة من قائمة المشاهدة';
+
+  @override
+  String get detailsSimilar => 'أفلام مشابهة';
+
+  @override
+  String get personBiography => 'السيرة الذاتية';
+
+  @override
+  String get personNoBiography => 'لا توجد سيرة ذاتية متاحة.';
+
+  @override
+  String get personKnownFor => 'أبرز الأعمال';
+
+  @override
+  String personBorn(String date) {
+    return 'تاريخ الميلاد: $date';
+  }
+
+  @override
+  String get personPlaceOfBirth => 'مكان الميلاد';
 
   @override
   String get searchHint => 'ابحث عن فيلم';

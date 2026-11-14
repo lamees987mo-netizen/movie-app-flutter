@@ -22,6 +22,14 @@
   "commonCacheError": "Couldn't read saved data on this device.",
   "commonOfflineBanner": "You're offline. Showing saved content.",
   "commonEmpty": "Nothing here yet.",
+  "commonShowMore": "Show more",
+  "@commonShowMore": {
+    "description": "Button that expands a long, cut-off text."
+  },
+  "commonShowLess": "Show less",
+  "@commonShowLess": {
+    "description": "Button that collapses an expanded text again."
+  },
 
   "detailsOverview": "Overview",
   "detailsCast": "Cast",
@@ -37,6 +45,34 @@
   "detailsNoOverview": "No overview available.",
   "detailsAddToWatchlist": "Add to watchlist",
   "detailsRemoveFromWatchlist": "Remove from watchlist",
+  "detailsSimilar": "Similar movies",
+  "@detailsSimilar": {
+    "description": "Title of the row of similar movies at the bottom of the details page."
+  },
+
+  "personBiography": "Biography",
+  "@personBiography": {
+    "description": "Section title above an actor's biography."
+  },
+  "personNoBiography": "No biography available.",
+  "@personNoBiography": {
+    "description": "Shown when TMDB has no biography for the actor."
+  },
+  "personKnownFor": "Known for",
+  "@personKnownFor": {
+    "description": "Section title above the movies an actor played in."
+  },
+  "personBorn": "Born {date}",
+  "@personBorn": {
+    "description": "The actor's birthday. The date is already formatted for the locale.",
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "personPlaceOfBirth": "Place of birth",
+  "@personPlaceOfBirth": {
+    "description": "Screen-reader label read before the actor's place of birth."
+  },
 
   "searchHint": "Search movies",
   "searchEmptyQuery": "Type a movie name to start searching.",
