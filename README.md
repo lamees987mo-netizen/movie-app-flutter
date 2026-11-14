@@ -121,7 +121,7 @@ lib/
 
 ```bash
 flutter test --coverage                  # unit + widget tests
-flutter test integration_test -d <id>    # on an emulator or phone
+flutter test integration_test --flavor dev -d <id>   # on an emulator or phone
 ```
 
 ## Getting started
@@ -134,9 +134,19 @@ flutter test integration_test -d <id>    # on an emulator or phone
    cd movie-app-flutter
    cp env.example.json env.json   # then paste your token into env.json
    flutter pub get
-   flutter run --dart-define-from-file=env.json
+   flutter run --flavor dev --dart-define-from-file=env.json
    ```
    `env.json` is git-ignored, so the token is never committed.
+
+### Flavors and deep links (Android)
+
+- `--flavor dev` installs **Movie App Dev** (`com.lamees.movie_app.dev`, with a
+  "DEV" ribbon); `--flavor prod` installs **Movie App**. Both can be installed
+  side by side.
+- Deep links open a screen directly, for example:
+  ```bash
+  adb shell am start -a android.intent.action.VIEW -d "movieapp://open/movie/550"
+  ```
 
 Requires Flutter 3.44 (Dart 3.12).
 
