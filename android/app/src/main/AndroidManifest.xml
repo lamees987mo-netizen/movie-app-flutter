@@ -2,7 +2,7 @@
     <!-- Needed in release builds too (debug/profile add it on their own). -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="movie_app"
+        android:label="Movie App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
