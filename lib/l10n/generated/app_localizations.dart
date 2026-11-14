@@ -206,6 +206,18 @@ abstract class AppLocalizations {
   /// **'Nothing here yet.'**
   String get commonEmpty;
 
+  /// Button that expands a long, cut-off text.
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get commonShowMore;
+
+  /// Button that collapses an expanded text again.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get commonShowLess;
+
   /// No description provided for @detailsOverview.
   ///
   /// In en, this message translates to:
@@ -253,6 +265,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove from watchlist'**
   String get detailsRemoveFromWatchlist;
+
+  /// Title of the row of similar movies at the bottom of the details page.
+  ///
+  /// In en, this message translates to:
+  /// **'Similar movies'**
+  String get detailsSimilar;
+
+  /// Section title above an actor's biography.
+  ///
+  /// In en, this message translates to:
+  /// **'Biography'**
+  String get personBiography;
+
+  /// Shown when TMDB has no biography for the actor.
+  ///
+  /// In en, this message translates to:
+  /// **'No biography available.'**
+  String get personNoBiography;
+
+  /// Section title above the movies an actor played in.
+  ///
+  /// In en, this message translates to:
+  /// **'Known for'**
+  String get personKnownFor;
+
+  /// The actor's birthday. The date is already formatted for the locale.
+  ///
+  /// In en, this message translates to:
+  /// **'Born {date}'**
+  String personBorn(String date);
+
+  /// Screen-reader label read before the actor's place of birth.
+  ///
+  /// In en, this message translates to:
+  /// **'Place of birth'**
+  String get personPlaceOfBirth;
 
   /// No description provided for @searchHint.
   ///
