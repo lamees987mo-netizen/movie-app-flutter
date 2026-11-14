@@ -25,6 +25,25 @@ android {
         versionName = flutter.versionName
     }
 
+    // Two flavors so a development build and the real app can be installed
+    // side by side: `flutter run --flavor dev` / `--flavor prod`.
+    buildFeatures {
+        resValues = true // needed for the per-flavor app_name below
+    }
+    flavorDimensions += "env"
+    productFlavors {
+        create("dev") {
+            dimension = "env"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            resValue("string", "app_name", "Movie App Dev")
+        }
+        create("prod") {
+            dimension = "env"
+            resValue("string", "app_name", "Movie App")
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

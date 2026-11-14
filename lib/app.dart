@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show appFlavor;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movie_app/core/di/injection.dart';
@@ -45,6 +46,17 @@ class _AppState extends State<App> {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             routerConfig: _router,
+            // A "DEV" corner ribbon on the dev flavor, so the two installed
+            // apps can't be confused. `appFlavor` comes from `--flavor`.
+            builder: (context, child) => appFlavor == 'dev'
+                ? Banner(
+                    message: 'DEV',
+                    location: BannerLocation.topEnd,
+                    textDirection: TextDirection.ltr,
+                    layoutDirection: TextDirection.ltr,
+                    child: child,
+                  )
+                : child!,
           );
         },
       ),
