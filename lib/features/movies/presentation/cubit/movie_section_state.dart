@@ -19,12 +19,16 @@ final class MovieSectionLoading extends MovieSectionState {
 }
 
 final class MovieSectionLoaded extends MovieSectionState {
-  const MovieSectionLoaded(this.movies);
+  const MovieSectionLoaded(this.movies, {this.isFromCache = false});
 
   final List<Movie> movies;
 
+  /// `true` when [movies] came from the offline cache because the network
+  /// failed. Home then shows the "You're offline" banner.
+  final bool isFromCache;
+
   @override
-  List<Object?> get props => [movies];
+  List<Object?> get props => [movies, isFromCache];
 }
 
 final class MovieSectionError extends MovieSectionState {

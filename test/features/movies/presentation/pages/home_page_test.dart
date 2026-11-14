@@ -33,8 +33,12 @@ void main() {
   late MockSettingsCubit settings;
   late StreamController<SettingsState> settingsChanges;
 
+  /// Lets a test make a section emit a new state (see [emitSection]).
+  late Map<MovieCategory, StreamController<MovieSectionState>> sectionChanges;
+
   setUp(() {
     cubits = {};
+    sectionChanges = {};
     sl.registerFactoryParam<MovieSectionCubit, MovieCategory, void>((
       category,
       _,
@@ -44,6 +48,9 @@ void main() {
       when(() => cubit.state).thenReturn(const MovieSectionLoaded([tMovie1]));
       when(cubit.load).thenAnswer((_) async {});
       when(cubit.refresh).thenAnswer((_) async {});
+      final changes = sectionChanges[category] =
+          StreamController<MovieSectionState>.broadcast();
+      when(() => cubit.stream).thenAnswer((_) => changes.stream);
       return cubits[category] = cubit;
     });
 
@@ -69,8 +76,24 @@ void main() {
   tearDown(() async {
     await connectivityChanges.close();
     await settingsChanges.close();
+    for (final changes in sectionChanges.values) {
+      await changes.close();
+    }
     await sl.reset();
   });
+
+  /// Makes the section of [category] switch to [state], like a real cubit.
+  Future<void> emitSection(
+    WidgetTester tester,
+    MovieCategory category,
+    MovieSectionState state,
+  ) async {
+    when(() => cubits[category]!.state).thenReturn(state);
+    sectionChanges[category]!.add(state);
+    // Two pumps, for the same reason as in `showEvents`.
+    await tester.pump();
+    await tester.pump();
+  }
 
   Future<void> pumpHome(WidgetTester tester) async {
     // Tall enough for all four sections to be built at once.
@@ -141,6 +164,31 @@ void main() {
     expect(find.byType(OfflineBanner), findsOneWidget);
     expect(find.text("You're offline. Showing saved content."), findsOneWidget);
   });
+
+  testWidgets(
+    'shows the banner while a section shows cached movies, also online',
+    (tester) async {
+      // E.g. Wi-Fi without internet: connectivity says "online", but the
+      // repository had to fall back to the cache.
+      await pumpHome(tester);
+      expect(find.byType(OfflineBanner), findsNothing);
+
+      await emitSection(
+        tester,
+        MovieCategory.topRated,
+        const MovieSectionLoaded([tMovie1], isFromCache: true),
+      );
+      expect(find.byType(OfflineBanner), findsOneWidget);
+
+      // Fresh data again (e.g. after pull to refresh): the banner goes.
+      await emitSection(
+        tester,
+        MovieCategory.topRated,
+        const MovieSectionLoaded([tMovie2]),
+      );
+      expect(find.byType(OfflineBanner), findsNothing);
+    },
+  );
 
   testWidgets('shows the banner when the connection drops', (tester) async {
     await pumpHome(tester);

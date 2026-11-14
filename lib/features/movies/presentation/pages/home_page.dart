@@ -47,6 +47,12 @@ class _HomePageState extends State<HomePage> {
   bool _isOffline = false;
   late final StreamSubscription<List<ConnectivityResult>> _connectivity;
 
+  /// Also show the bar when a section shows cached movies although the
+  /// phone looks online (e.g. Wi-Fi without internet): connectivity only
+  /// knows that a network is there, not that the internet works.
+  bool _showsCachedMovies = false;
+  late final List<StreamSubscription<MovieSectionState>> _sectionChanges;
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +60,10 @@ class _HomePageState extends State<HomePage> {
     for (final cubit in _cubits) {
       unawaited(cubit.load());
     }
+    _sectionChanges = [
+      for (final cubit in _cubits)
+        cubit.stream.listen((_) => _onSectionChanged()),
+    ];
 
     final connectivity = sl<Connectivity>();
     unawaited(connectivity.checkConnectivity().then(_onConnectivityChanged));
@@ -72,9 +82,25 @@ class _HomePageState extends State<HomePage> {
     if (!isOffline) unawaited(_refresh());
   }
 
+  /// Rebuilds Home only when the "some section is cached" answer changes;
+  /// the sections redraw themselves with their own `BlocBuilder`.
+  void _onSectionChanged() {
+    final showsCachedMovies = _cubits.any(
+      (cubit) => switch (cubit.state) {
+        MovieSectionLoaded(:final isFromCache) => isFromCache,
+        _ => false,
+      },
+    );
+    if (!mounted || showsCachedMovies == _showsCachedMovies) return;
+    setState(() => _showsCachedMovies = showsCachedMovies);
+  }
+
   @override
   void dispose() {
     unawaited(_connectivity.cancel());
+    for (final subscription in _sectionChanges) {
+      unawaited(subscription.cancel());
+    }
     for (final cubit in _cubits) {
       unawaited(cubit.close());
     }
@@ -96,7 +122,7 @@ class _HomePageState extends State<HomePage> {
         listener: (context, _) => unawaited(_refresh()),
         child: Column(
           children: [
-            if (_isOffline) const OfflineBanner(),
+            if (_isOffline || _showsCachedMovies) const OfflineBanner(),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _refresh,

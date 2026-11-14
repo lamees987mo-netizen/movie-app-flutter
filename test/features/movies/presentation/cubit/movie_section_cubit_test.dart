@@ -70,6 +70,26 @@ void main() {
     );
 
     blocTest<MovieSectionCubit, MovieSectionState>(
+      'marks movies that came from the offline cache',
+      setUp: () => stubGetMovies(
+        const Success(
+          PaginatedMovies(
+            movies: [tMovie1],
+            page: 1,
+            totalPages: 1,
+            isFromCache: true,
+          ),
+        ),
+      ),
+      build: buildCubit,
+      act: (cubit) => cubit.load(),
+      expect: () => [
+        const MovieSectionLoading(),
+        const MovieSectionLoaded([tMovie1], isFromCache: true),
+      ],
+    );
+
+    blocTest<MovieSectionCubit, MovieSectionState>(
       'emits Loading, then Error when the repository fails',
       setUp: () => stubGetMovies(const Err(NetworkFailure())),
       build: buildCubit,
