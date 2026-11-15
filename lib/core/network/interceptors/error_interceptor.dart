@@ -21,6 +21,9 @@ class ErrorInterceptor extends Interceptor {
       case DioExceptionType.connectionError:
         return const NetworkException();
       case DioExceptionType.badResponse:
+        // Every bad status stays a ServerException with its code, also 401
+        // (bad token): the app cannot fix a token at runtime, so it needs
+        // no special failure type; the code is kept for logs and tests.
         return ServerException(
           statusCode: err.response?.statusCode,
           message: _statusMessage(err.response?.data),
@@ -29,7 +32,11 @@ class ErrorInterceptor extends Interceptor {
       case DioExceptionType.cancel:
       case DioExceptionType.transformTimeout:
       case DioExceptionType.unknown:
-        if (err.error is SocketException) return const NetworkException();
+        // `IOException` covers more than `SocketException`: e.g. an
+        // `HttpException` when the connection drops mid-response, or a
+        // `TlsException` behind a captive portal. All of them mean "the
+        // network failed", not "the server answered with an error".
+        if (err.error is IOException) return const NetworkException();
         return ServerException(statusCode: err.response?.statusCode);
     }
   }

@@ -6,7 +6,7 @@ import 'package:movie_app/features/movies/domain/entities/movie_details.dart';
 part 'movie_details_model.g.dart';
 
 /// Response of `movie/{id}?append_to_response=credits,videos,similar`.
-@JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class MovieDetailsModel {
   const MovieDetailsModel({
     required this.id,
@@ -25,6 +25,12 @@ class MovieDetailsModel {
 
   factory MovieDetailsModel.fromJson(Map<String, dynamic> json) =>
       _$MovieDetailsModelFromJson(json);
+
+  /// Used by the offline cache. Note: `cast` and `videos` are written as
+  /// flat lists; `MoviesLocalDataSource` nests them back the way TMDB
+  /// sends them (`credits.cast`, `videos.results`) so `fromJson` can read
+  /// them.
+  Map<String, dynamic> toJson() => _$MovieDetailsModelToJson(this);
 
   final int id;
   @JsonKey(defaultValue: '')
@@ -89,18 +95,20 @@ class MovieDetailsModel {
   );
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class GenreModel {
   const GenreModel({required this.id, required this.name});
 
   factory GenreModel.fromJson(Map<String, dynamic> json) =>
       _$GenreModelFromJson(json);
 
+  Map<String, dynamic> toJson() => _$GenreModelToJson(this);
+
   final int id;
   final String name;
 }
 
-@JsonSerializable(fieldRename: FieldRename.snake, createToJson: false)
+@JsonSerializable(fieldRename: FieldRename.snake)
 class CastMemberModel {
   const CastMemberModel({
     required this.id,
@@ -119,6 +127,8 @@ class CastMemberModel {
   final String character;
   final String? profilePath;
 
+  Map<String, dynamic> toJson() => _$CastMemberModelToJson(this);
+
   CastMember toEntity() => CastMember(
     id: id,
     name: name,
@@ -127,7 +137,7 @@ class CastMemberModel {
   );
 }
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class VideoModel {
   const VideoModel({
     required this.key,
@@ -138,6 +148,8 @@ class VideoModel {
 
   factory VideoModel.fromJson(Map<String, dynamic> json) =>
       _$VideoModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$VideoModelToJson(this);
 
   final String key;
   final String site;

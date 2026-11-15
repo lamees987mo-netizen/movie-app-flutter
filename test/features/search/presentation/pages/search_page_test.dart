@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,9 +10,12 @@ import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/error/failures.dart';
 import 'package:movie_app/core/router/routes.dart';
 import 'package:movie_app/core/widgets/movie_poster_card.dart';
+import 'package:movie_app/features/movies/domain/entities/movie.dart';
 import 'package:movie_app/features/movies/presentation/navigation/movie_details_args.dart';
 import 'package:movie_app/features/search/presentation/bloc/search_bloc.dart';
 import 'package:movie_app/features/search/presentation/pages/search_page.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
 
 import '../../../movies/movies_test_helpers.dart';
@@ -18,10 +23,37 @@ import '../../../movies/movies_test_helpers.dart';
 class MockSearchBloc extends MockBloc<SearchEvent, SearchState>
     implements SearchBloc {}
 
+class MockSettingsCubit extends MockCubit<SettingsState>
+    implements SettingsCubit {}
+
 void main() {
   late MockSearchBloc bloc;
+  late MockSettingsCubit settings;
+  late StreamController<SettingsState> settingsChanges;
 
-  setUp(() => bloc = MockSearchBloc());
+  setUp(() {
+    bloc = MockSearchBloc();
+    when(() => bloc.isClosed).thenReturn(false);
+    settings = MockSettingsCubit();
+    settingsChanges = StreamController<SettingsState>();
+    whenListen(
+      settings,
+      settingsChanges.stream,
+      initialState: const SettingsState(),
+    );
+  });
+
+  // Not awaited: most tests never listen to it, and `close()` of a stream
+  // nobody listened to never completes.
+  tearDown(() => unawaited(settingsChanges.close()));
+
+  /// Shows the whole [SearchPage]; it needs the app-wide [SettingsCubit].
+  Future<void> pumpPage(WidgetTester tester) => tester.pumpWidget(
+    BlocProvider<SettingsCubit>.value(
+      value: settings,
+      child: wrapWithApp(const SearchPage()),
+    ),
+  );
 
   /// Shows a [SearchView] whose bloc is stuck in [state].
   Future<void> pumpView(WidgetTester tester, SearchState state) {
@@ -174,7 +206,7 @@ void main() {
         return bloc;
       });
 
-      await tester.pumpWidget(wrapWithApp(const SearchPage()));
+      await pumpPage(tester);
 
       expect(created, 1);
       expect(find.byType(SearchView), findsOneWidget);
@@ -186,6 +218,105 @@ void main() {
       // The page created the bloc, so it also closes it.
       await tester.pumpWidget(const SizedBox());
       verify(bloc.close).called(1);
+    });
+
+    testWidgets('searches again when the language changes', (tester) async {
+      when(() => bloc.state).thenReturn(const SearchInitial());
+      sl.registerFactory<SearchBloc>(() => bloc);
+      await pumpPage(tester);
+
+      settingsChanges.add(const SettingsState(themeMode: ThemeMode.dark));
+      await tester.pump();
+      verifyNever(() => bloc.add(const SearchLanguageChanged()));
+
+      settingsChanges.add(const SettingsState(locale: Locale('ar')));
+      await tester.pump();
+      verify(() => bloc.add(const SearchLanguageChanged())).called(1);
+    });
+  });
+
+  group('more results', () {
+    /// More than fit on the screen, so the last ones are not built yet.
+    final manyMovies = [
+      for (var id = 1; id <= 60; id++)
+        Movie(id: id, title: 'Movie $id', overview: '', voteAverage: 5),
+    ];
+
+    testWidgets('asks for the next page only near the end', (tester) async {
+      await pumpView(
+        tester,
+        SearchLoaded(movies: manyMovies, query: 'a', hasReachedMax: false),
+      );
+      await tester.pump();
+      verifyNever(() => bloc.add(const SearchNextPageRequested()));
+
+      await tester.scrollUntilVisible(
+        find.byWidgetPredicate(
+          (w) => w is MoviePosterCard && w.movie.id == 60,
+        ),
+        500,
+        // The text field has a Scrollable too; scroll the results.
+        scrollable: find.descendant(
+          of: find.byType(CustomScrollView),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.pump();
+
+      verify(() => bloc.add(const SearchNextPageRequested())).called(
+        greaterThan(0),
+      );
+    });
+
+    testWidgets('does not ask after the last page', (tester) async {
+      await pumpView(
+        tester,
+        const SearchLoaded(movies: [tMovie1, tMovie2], query: 'a'),
+      );
+      await tester.pump();
+
+      verifyNever(() => bloc.add(const SearchNextPageRequested()));
+    });
+
+    testWidgets('shows a spinner below the results while loading more', (
+      tester,
+    ) async {
+      await pumpView(
+        tester,
+        const SearchLoaded(
+          movies: [tMovie1, tMovie2],
+          query: 'a',
+          hasReachedMax: false,
+          isLoadingMore: true,
+        ),
+      );
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      verifyNever(() => bloc.add(const SearchNextPageRequested()));
+    });
+
+    testWidgets('keeps the results after a failure and retries on tap', (
+      tester,
+    ) async {
+      await pumpView(
+        tester,
+        const SearchLoaded(
+          movies: [tMovie1, tMovie2],
+          query: 'a',
+          hasReachedMax: false,
+          loadMoreFailure: NetworkFailure(),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.byType(MoviePosterCard), findsNWidgets(2));
+      expect(find.textContaining('No internet connection'), findsOneWidget);
+      // No automatic retry loop.
+      verifyNever(() => bloc.add(const SearchNextPageRequested()));
+
+      await tester.tap(find.text('Retry'));
+      verify(() => bloc.add(const SearchNextPageRequested())).called(1);
     });
   });
 }

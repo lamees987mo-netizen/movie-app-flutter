@@ -57,7 +57,9 @@ class MovieSectionCubit extends Cubit<MovieSectionState> {
 
     switch (result) {
       case Success(:final value):
-        emit(MovieSectionLoaded(value.movies));
+        emit(
+          MovieSectionLoaded(value.movies, isFromCache: value.isFromCache),
+        );
       case Err(:final failure):
         if (!keepMoviesOnError) emit(MovieSectionError(failure));
     }

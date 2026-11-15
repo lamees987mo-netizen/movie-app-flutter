@@ -70,6 +70,17 @@ void main() {
         expect(run(err).error, isA<NetworkException>());
       });
     }
+
+    for (final cause in [
+      const HttpException('Connection closed while receiving data'),
+      const TlsException('handshake failed'),
+      const FileSystemException('cannot write'),
+    ]) {
+      test('unknown caused by ${cause.runtimeType} (an IOException)', () {
+        final err = error(DioExceptionType.unknown, cause: cause);
+        expect(run(err).error, isA<NetworkException>());
+      });
+    }
   });
 
   group('badResponse becomes a ServerException', () {
@@ -115,7 +126,7 @@ void main() {
     });
   });
 
-  group('becomes a ServerException (no SocketException) for', () {
+  group('becomes a ServerException (no IOException) for', () {
     for (final type in [
       DioExceptionType.badCertificate,
       DioExceptionType.cancel,

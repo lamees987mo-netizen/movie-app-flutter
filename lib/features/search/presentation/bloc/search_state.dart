@@ -23,14 +23,46 @@ final class SearchLoading extends SearchState {
   const SearchLoading();
 }
 
+/// At least one page of results is on screen.
+///
+/// Like the "See all" grid, an error while loading the *next* page does
+/// not replace the results: it is kept in [loadMoreFailure] and shown as
+/// a small retry below them. The defaults describe a single, last page.
 final class SearchLoaded extends SearchState {
-  const SearchLoaded({required this.movies, required this.query});
+  const SearchLoaded({
+    required this.movies,
+    required this.query,
+    this.page = 1,
+    this.hasReachedMax = true,
+    this.isLoadingMore = false,
+    this.loadMoreFailure,
+  });
 
+  /// Every result loaded so far, without duplicates.
   final List<Movie> movies;
   final String query;
 
+  /// The last page that was loaded (1-based).
+  final int page;
+
+  /// `true` when there is no next page to request.
+  final bool hasReachedMax;
+
+  /// `true` while the next page is being requested.
+  final bool isLoadingMore;
+
+  /// Why the last attempt to load the next page failed, if it did.
+  final Failure? loadMoreFailure;
+
   @override
-  List<Object?> get props => [movies, query];
+  List<Object?> get props => [
+    movies,
+    query,
+    page,
+    hasReachedMax,
+    isLoadingMore,
+    loadMoreFailure,
+  ];
 }
 
 /// The search worked but found nothing for [query].

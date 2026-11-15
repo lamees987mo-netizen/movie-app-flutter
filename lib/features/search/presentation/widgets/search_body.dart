@@ -21,7 +21,7 @@ class SearchBody extends StatelessWidget {
           icon: Icons.search,
         ),
         SearchLoading() => const SearchLoadingGrid(),
-        SearchLoaded(:final movies) => SearchResultsGrid(movies: movies),
+        SearchLoaded() => SearchResultsGrid(state: state),
         SearchEmpty(:final query) => EmptyView(
           title: l10n.searchNoResults(query),
           icon: Icons.search_off,
