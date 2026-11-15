@@ -1,7 +1,10 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive_ce.dart';
+import 'package:movie_app/core/analytics/analytics_service.dart';
 import 'package:movie_app/core/config/env.dart';
 import 'package:movie_app/core/network/dio_client.dart';
 import 'package:movie_app/core/storage/hive_boxes.dart';
@@ -28,7 +31,13 @@ void initDependencies() {
         languageCode: () => sl<SettingsCubit>().state.locale.languageCode,
       ),
     )
-    ..registerLazySingleton<Connectivity>(Connectivity.new);
+    ..registerLazySingleton<Connectivity>(Connectivity.new)
+    // Firebase only when `main` could start it (not in tests, not on iOS).
+    ..registerLazySingleton<AnalyticsService>(
+      () => Firebase.apps.isEmpty
+          ? const NoopAnalyticsService()
+          : FirebaseAnalyticsService(FirebaseAnalytics.instance),
+    );
 
   // Each box is registered by name: sl<Box<dynamic>>(instanceName: ...).
   for (final name in [

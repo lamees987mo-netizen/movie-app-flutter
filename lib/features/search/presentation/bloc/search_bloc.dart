@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/core/analytics/analytics_service.dart';
 import 'package:movie_app/core/result/result.dart';
 import 'package:movie_app/features/movies/domain/entities/movie.dart';
 import 'package:movie_app/features/movies/domain/repositories/movies_repository.dart';
@@ -20,6 +23,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({
     required this._repository,
     this.debounceDuration = const Duration(milliseconds: 400),
+    this._analytics = const NoopAnalyticsService(),
   }) : super(const SearchInitial()) {
     // Debounce + cancellation without an extra package:
     //
@@ -42,6 +46,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   final MoviesRepository _repository;
+  final AnalyticsService _analytics;
   final Duration debounceDuration;
 
   /// The last trimmed query, used by [SearchRetried] and
@@ -94,6 +99,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Future<void> _search(String query, Emitter<SearchState> emit) async {
     final generation = ++_generation;
     emit(const SearchLoading());
+    // Logged here, after the debounce: one event per real search, not per
+    // keystroke.
+    unawaited(_analytics.logSearch(query));
     final result = await _repository.searchMovies(query);
 
     // Cancelled by a newer event (the result is stale), the screen was

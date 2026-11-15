@@ -3,6 +3,7 @@
 // ignore_for_file: unused_import
 
 import 'package:movie_app/app.dart';
+import 'package:movie_app/core/analytics/analytics_service.dart';
 import 'package:movie_app/core/config/env.dart';
 import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/error/exceptions.dart';

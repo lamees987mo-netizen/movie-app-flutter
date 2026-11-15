@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce/hive_ce.dart';
+import 'package:movie_app/core/analytics/analytics_service.dart';
 import 'package:movie_app/core/storage/hive_boxes.dart';
 import 'package:movie_app/features/movies/domain/entities/movie.dart';
 import 'package:movie_app/features/watchlist/data/datasources/watchlist_local_data_source.dart';
@@ -28,6 +29,7 @@ void registerWatchlistDependencies(GetIt sl) {
       (movie, _) => WatchlistToggleCubit(
         movie: movie,
         repository: sl<WatchlistRepository>(),
+        analytics: sl<AnalyticsService>(),
       ),
     );
 }

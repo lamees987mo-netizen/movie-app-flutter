@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/core/analytics/analytics_service.dart';
 import 'package:movie_app/core/result/result.dart';
 import 'package:movie_app/features/movies/domain/entities/movie.dart';
 import 'package:movie_app/features/watchlist/domain/repositories/watchlist_repository.dart';
@@ -13,11 +16,15 @@ export 'watchlist_toggle_state.dart';
 /// holds the add-or-remove logic, so a `ToggleWatchlist` use case would
 /// only forward the call (see CONVENTIONS.md).
 class WatchlistToggleCubit extends Cubit<WatchlistToggleState> {
-  WatchlistToggleCubit({required this.movie, required this._repository})
-    : super(const WatchlistToggleState());
+  WatchlistToggleCubit({
+    required this.movie,
+    required this._repository,
+    this._analytics = const NoopAnalyticsService(),
+  }) : super(const WatchlistToggleState());
 
   final Movie movie;
   final WatchlistRepository _repository;
+  final AnalyticsService _analytics;
 
   bool _busy = false;
 
@@ -48,6 +55,11 @@ class WatchlistToggleCubit extends Cubit<WatchlistToggleState> {
 
     final result = await _repository.toggle(movie);
     _busy = false;
+    if (result case Success(:final value)) {
+      unawaited(
+        _analytics.logWatchlistChanged(movieId: movie.id, added: value),
+      );
+    }
     if (isClosed) return;
     emit(
       switch (result) {

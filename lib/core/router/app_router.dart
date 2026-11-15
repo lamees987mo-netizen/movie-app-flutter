@@ -15,9 +15,12 @@ import 'package:movie_app/l10n/generated/app_localizations.dart';
 /// Each feature owns its routes in `<feature>_routes.dart`:
 /// - `xBranch`: the tab's routes, shown inside the bottom navigation shell.
 /// - `xRoutes`: full-screen routes pushed above the shell (e.g. details).
-GoRouter createAppRouter() {
+///
+/// [observers] watch screen changes, e.g. to log them to analytics.
+GoRouter createAppRouter({List<NavigatorObserver> observers = const []}) {
   return GoRouter(
     initialLocation: Routes.home,
+    observers: observers,
     // Unknown paths: a localized "not found" screen instead of go_router's
     // default English page.
     errorBuilder: (context, state) => Scaffold(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show appFlavor;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movie_app/core/analytics/analytics_service.dart';
 import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/router/app_router.dart';
 import 'package:movie_app/core/theme/app_theme.dart';
@@ -20,7 +21,9 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   // Created once, so navigation state survives theme/language changes.
-  final GoRouter _router = createAppRouter();
+  final GoRouter _router = createAppRouter(
+    observers: sl<AnalyticsService>().navigatorObservers,
+  );
 
   @override
   void dispose() {
