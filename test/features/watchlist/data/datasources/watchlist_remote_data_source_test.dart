@@ -1,3 +1,7 @@
+// Firestore marks its reference and snapshot classes @sealed so apps don't
+// subclass them; mocking them in tests is the documented exception.
+// ignore_for_file: subtype_of_sealed_class
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
