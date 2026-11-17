@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Each signed-in user can read and write only their own documents under
+// users/{uid} (today: users/{uid}/watchlist/{movieId}). Everything else is
+// denied, including for guests.
+//
+// Deploy: paste into Firebase Console > Firestore > Rules, or run
+// `firebase deploy --only firestore:rules` (uses firebase.json).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
