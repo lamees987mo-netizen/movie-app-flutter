@@ -9,6 +9,7 @@ import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/error/exceptions.dart';
 import 'package:movie_app/core/error/failure_message.dart';
 import 'package:movie_app/core/error/failures.dart';
+import 'package:movie_app/core/firebase/firebase_options.dart';
 import 'package:movie_app/core/network/api_endpoints.dart';
 import 'package:movie_app/core/network/dio_client.dart';
 import 'package:movie_app/core/network/image_url.dart';

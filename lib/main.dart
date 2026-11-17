@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/app.dart';
 import 'package:movie_app/core/config/env.dart';
 import 'package:movie_app/core/di/injection.dart';
+import 'package:movie_app/core/firebase/firebase_options.dart';
 import 'package:movie_app/core/storage/hive_boxes.dart';
 
 Future<void> main() async {
@@ -21,12 +22,12 @@ Future<void> main() async {
 
 /// Starts Firebase and sends uncaught errors to Crashlytics.
 ///
-/// Android reads its settings from `android/app/google-services.json`.
-/// If Firebase is not configured (e.g. iOS here), the app still runs:
-/// analytics falls back to a no-op (see `initDependencies`).
+/// Android reads its settings from `android/app/google-services.json`, iOS
+/// from [AppFirebaseOptions]. If Firebase can't start (e.g. desktop), the
+/// app still runs: analytics falls back to a no-op (see `initDependencies`).
 Future<void> _initFirebase() async {
   try {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(options: AppFirebaseOptions.currentPlatform);
   } on Object catch (error) {
     log('Firebase is not configured, continuing without it', error: error);
     return;
