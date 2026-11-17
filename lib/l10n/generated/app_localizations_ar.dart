@@ -181,4 +181,13 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get tmdbAttribution =>
       'يستخدم هذا المنتج واجهة TMDB البرمجية لكنه غير معتمد أو موثّق من TMDB.';
+
+  @override
+  String get trailerTitle => 'الإعلان';
+
+  @override
+  String get trailerOpenInYoutube => 'فتح في يوتيوب';
+
+  @override
+  String get trailerError => 'لا يمكن تشغيل هذا الإعلان داخل التطبيق.';
 }

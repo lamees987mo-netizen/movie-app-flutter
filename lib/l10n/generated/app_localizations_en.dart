@@ -174,4 +174,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tmdbAttribution =>
       'This product uses the TMDB API but is not endorsed or certified by TMDB.';
+
+  @override
+  String get trailerTitle => 'Trailer';
+
+  @override
+  String get trailerOpenInYoutube => 'Open in YouTube';
+
+  @override
+  String get trailerError => 'This trailer can\'t be played in the app.';
 }

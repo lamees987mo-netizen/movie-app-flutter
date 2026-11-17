@@ -47,10 +47,13 @@ import 'package:movie_app/features/movies/presentation/cubit/movie_section_state
 import 'package:movie_app/features/movies/presentation/cubit/see_all_cubit.dart';
 import 'package:movie_app/features/movies/presentation/cubit/see_all_state.dart';
 import 'package:movie_app/features/movies/presentation/navigation/movie_details_args.dart';
+import 'package:movie_app/features/movies/presentation/navigation/trailer_navigation.dart';
 import 'package:movie_app/features/movies/presentation/pages/home_page.dart';
 import 'package:movie_app/features/movies/presentation/pages/movie_details_page.dart';
 import 'package:movie_app/features/movies/presentation/pages/see_all_page.dart';
+import 'package:movie_app/features/movies/presentation/pages/trailer_page.dart';
 import 'package:movie_app/features/movies/presentation/utils/movie_category_title.dart';
+import 'package:movie_app/features/movies/presentation/utils/youtube.dart';
 import 'package:movie_app/features/movies/presentation/widgets/details/cast_list.dart';
 import 'package:movie_app/features/movies/presentation/widgets/details/details_app_bar.dart';
 import 'package:movie_app/features/movies/presentation/widgets/details/details_summary.dart';
@@ -59,6 +62,7 @@ import 'package:movie_app/features/movies/presentation/widgets/details/similar_m
 import 'package:movie_app/features/movies/presentation/widgets/details/trailer_button.dart';
 import 'package:movie_app/features/movies/presentation/widgets/movie_section.dart';
 import 'package:movie_app/features/movies/presentation/widgets/network_image_or_placeholder.dart';
+import 'package:movie_app/features/movies/presentation/widgets/trailer/trailer_player.dart';
 import 'package:movie_app/features/person/data/datasources/person_remote_data_source.dart';
 import 'package:movie_app/features/person/data/models/person_model.dart';
 import 'package:movie_app/features/person/data/repositories/person_repository_impl.dart';
