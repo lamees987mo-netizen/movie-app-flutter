@@ -12,7 +12,28 @@
           "package_name": "com.lamees.movie_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "764841872920-4o302bu5enk3t58lac05nq6dn3k3u2t1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lamees.movie_app",
+            "certificate_hash": "b116a4a1b68337a08d94c96a9a4b4b7c72d9975f"
+          }
+        },
+        {
+          "client_id": "764841872920-76r8820mahss7c8ni91r4diro05ja6dn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lamees.movie_app",
+            "certificate_hash": "273a386a13828d0939b99541070df3083491d960"
+          }
+        },
+        {
+          "client_id": "764841872920-5bdn0v1ilohsb8qbkcq235f3jijer00e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDMySOzFce-a1mJ1WdTJUTO5463cPj_b_k"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764841872920-5bdn0v1ilohsb8qbkcq235f3jijer00e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "764841872920-8opecbsb57pofrd01uk9kvoi1p7cpmqp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lamees.movieApp"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +64,28 @@
           "package_name": "com.lamees.movie_app.dev"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "764841872920-dl1ikunq8ad1p4mr7ck4kv5snreo2vit.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lamees.movie_app.dev",
+            "certificate_hash": "b116a4a1b68337a08d94c96a9a4b4b7c72d9975f"
+          }
+        },
+        {
+          "client_id": "764841872920-t0ib1k4mau0qg2lrtc8m5edmd57m31oa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lamees.movie_app.dev",
+            "certificate_hash": "273a386a13828d0939b99541070df3083491d960"
+          }
+        },
+        {
+          "client_id": "764841872920-5bdn0v1ilohsb8qbkcq235f3jijer00e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDMySOzFce-a1mJ1WdTJUTO5463cPj_b_k"
@@ -39,7 +93,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764841872920-5bdn0v1ilohsb8qbkcq235f3jijer00e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "764841872920-8opecbsb57pofrd01uk9kvoi1p7cpmqp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lamees.movieApp"
+              }
+            }
+          ]
         }
       }
     }

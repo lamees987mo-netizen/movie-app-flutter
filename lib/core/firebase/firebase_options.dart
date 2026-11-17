@@ -22,6 +22,10 @@ abstract final class AppFirebaseOptions {
     messagingSenderId: '764841872920',
     projectId: 'movie-app-flutter-c20b3',
     storageBucket: 'movie-app-flutter-c20b3.firebasestorage.app',
+    // Needed by Google sign-in on iOS.
+    iosClientId:
+        '764841872920-8opecbsb57pofrd01uk9kvoi1p7cpmqp'
+        '.apps.googleusercontent.com',
     iosBundleId: 'com.lamees.movieApp',
   );
 }
