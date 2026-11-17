@@ -6,8 +6,12 @@ abstract final class Routes {
   static const String seeAll = '/see-all/:category';
   static const String search = '/search';
   static const String watchlist = '/watchlist';
-  static const String settings = '/settings';
+  static const String account = '/account';
+  static const String signIn = '/sign-in';
   static const String person = '/person/:id';
+
+  /// Old path of the Settings tab; redirects to [account].
+  static const String settings = '/settings';
 
   static String movieDetailsPath(int movieId) => '/movie/$movieId';
 
@@ -24,6 +28,7 @@ abstract final class RouteNames {
   static const String seeAll = 'seeAll';
   static const String search = 'search';
   static const String watchlist = 'watchlist';
-  static const String settings = 'settings';
+  static const String account = 'account';
+  static const String signIn = 'signIn';
   static const String person = 'person';
 }

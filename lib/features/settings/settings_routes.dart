@@ -1,17 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:movie_app/core/router/routes.dart';
-import 'package:movie_app/features/settings/presentation/pages/settings_page.dart';
 
-/// The Settings tab.
-final StatefulShellBranch settingsBranch = StatefulShellBranch(
-  routes: [
-    GoRoute(
-      path: Routes.settings,
-      name: RouteNames.settings,
-      builder: (context, state) => const SettingsPage(),
-    ),
-  ],
-);
-
-/// Full-screen routes shown above the bottom navigation bar (none yet).
-final List<RouteBase> settingsRoutes = [];
+/// Settings no longer has its own tab: it is a section of the account
+/// page. The old path still works (e.g. an old deep link) and opens the
+/// account tab.
+final List<RouteBase> settingsRoutes = [
+  GoRoute(path: Routes.settings, redirect: (_, _) => Routes.account),
+];

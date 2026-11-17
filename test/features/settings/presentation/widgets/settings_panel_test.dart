@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
-import 'package:movie_app/features/settings/presentation/pages/settings_page.dart';
+import 'package:movie_app/features/settings/presentation/widgets/settings_panel.dart';
 
 import '../../../movies/movies_test_helpers.dart';
 
@@ -32,7 +32,7 @@ void main() {
     return tester.pumpWidget(
       BlocProvider<SettingsCubit>.value(
         value: cubit,
-        child: wrapWithApp(const SettingsPage()),
+        child: wrapWithApp(const Scaffold(body: SettingsPanel())),
       ),
     );
   }
@@ -43,7 +43,6 @@ void main() {
   testWidgets('shows the theme and language choices', (tester) async {
     await pumpPage(tester);
 
-    expect(find.text('Settings'), findsOneWidget);
     expect(find.text('Theme'), findsOneWidget);
     expect(find.text('Light'), findsOneWidget);
     expect(find.text('Dark'), findsOneWidget);
@@ -51,14 +50,6 @@ void main() {
     expect(find.text('Language'), findsOneWidget);
     expect(find.text('English'), findsOneWidget);
     expect(find.text('العربية'), findsOneWidget);
-  });
-
-  testWidgets('shows the TMDB attribution (required by TMDB)', (
-    tester,
-  ) async {
-    await pumpPage(tester);
-
-    expect(find.textContaining('uses the TMDB API'), findsOneWidget);
   });
 
   testWidgets('selects the current theme and language', (tester) async {
