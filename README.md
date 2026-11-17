@@ -116,7 +116,10 @@ lib/
 - **Analytics behind an interface.** Features call an `AnalyticsService`,
   not Firebase. Tests and platforms without Firebase get a no-op version, so
   nothing breaks when Firebase is missing, and Crashlytics is off in debug
-  builds so the dashboard only shows real crashes.
+  builds so the dashboard only shows real crashes. Android reads
+  `google-services.json`; iOS gets its Firebase options from Dart code
+  (`AppFirebaseOptions`), because adding the plist to the Xcode project
+  needs a Mac.
 - **No `freezed`.** Dart 3 `sealed` classes and `equatable` cover states and
   failures with less generated code.
 - **Generated code is committed.** A fresh clone builds without running
@@ -164,7 +167,12 @@ flutter test integration_test --flavor dev -d <id>   # on an emulator or phone
   adb shell am start -a android.intent.action.VIEW -d "movieapp://open/movie/550"
   ```
 
-Requires Flutter 3.44 (Dart 3.12).
+Requires Flutter 3.44 (Dart 3.12). The app was built and tested on Android;
+iOS is configured (including Firebase) but has not been run on a device.
+
+Release builds are signed with an upload key described in
+`android/key.properties`, which is not in the repo. Without that file,
+release builds fall back to the debug key, so a fresh clone still builds.
 
 ### About the token and the APK
 
