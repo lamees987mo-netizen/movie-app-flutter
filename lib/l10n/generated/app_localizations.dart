@@ -409,6 +409,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This product uses the TMDB API but is not endorsed or certified by TMDB.'**
   String get tmdbAttribution;
+
+  /// App bar title of the trailer screen when the movie title is unknown (e.g. opened from a link).
+  ///
+  /// In en, this message translates to:
+  /// **'Trailer'**
+  String get trailerTitle;
+
+  /// Button and app bar action that opens the trailer in the YouTube app or the browser instead of the in-app player.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in YouTube'**
+  String get trailerOpenInYoutube;
+
+  /// Shown on the trailer screen when the in-app player reports an error (e.g. the owner blocked embedding).
+  ///
+  /// In en, this message translates to:
+  /// **'This trailer can\'t be played in the app.'**
+  String get trailerError;
 }
 
 class _AppLocalizationsDelegate

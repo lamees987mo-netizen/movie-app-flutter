@@ -61,5 +61,9 @@
   "settingsEnglish": "English",
   "settingsArabic": "العربية",
 
-  "tmdbAttribution": "يستخدم هذا المنتج واجهة TMDB البرمجية لكنه غير معتمد أو موثّق من TMDB."
+  "tmdbAttribution": "يستخدم هذا المنتج واجهة TMDB البرمجية لكنه غير معتمد أو موثّق من TMDB.",
+
+  "trailerTitle": "الإعلان",
+  "trailerOpenInYoutube": "فتح في يوتيوب",
+  "trailerError": "لا يمكن تشغيل هذا الإعلان داخل التطبيق."
 }
