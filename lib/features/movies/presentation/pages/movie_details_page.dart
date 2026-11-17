@@ -243,7 +243,11 @@ class _DetailsSections extends StatelessWidget {
           spacing: AppSpacing.sm,
           runSpacing: AppSpacing.sm,
           children: [
-            if (trailerKey != null) TrailerButton(youtubeKey: trailerKey),
+            if (trailerKey != null)
+              TrailerButton(
+                youtubeKey: trailerKey,
+                title: details.movie.title,
+              ),
             // Only once loaded: while loading, `details` is a fake
             // skeleton movie, and saving it would store junk.
             if (!isLoading) WatchlistButton(movie: details.movie),
