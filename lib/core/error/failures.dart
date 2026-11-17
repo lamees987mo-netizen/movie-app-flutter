@@ -37,3 +37,41 @@ final class CacheFailure extends Failure {
 final class UnknownFailure extends Failure {
   const UnknownFailure();
 }
+
+/// Why signing in, signing up or changing the account failed.
+///
+/// One enum instead of one class per reason: the UI only needs the reason
+/// to pick a message (see `failure_message.dart`).
+enum AuthError {
+  /// Wrong email or password. Firebase no longer says which of the two, so
+  /// nobody can find out which emails have an account.
+  invalidCredentials,
+  emailAlreadyInUse,
+  weakPassword,
+  invalidEmail,
+  userDisabled,
+  tooManyRequests,
+
+  /// Deleting the account needs a fresh sign-in (Firebase asks for one when
+  /// the last sign-in is more than a few minutes old).
+  requiresRecentLogin,
+
+  /// The user closed the Google account picker.
+  cancelled,
+
+  /// Sign-in is not set up: no Firebase (tests, desktop), or the method is
+  /// not enabled in the Firebase console.
+  unavailable,
+  unknown,
+}
+
+/// A sign-in or account error. A lost connection is a [NetworkFailure]
+/// instead, so it shows the same message as everywhere else in the app.
+final class AuthFailure extends Failure {
+  const AuthFailure(this.error);
+
+  final AuthError error;
+
+  @override
+  List<Object?> get props => [error];
+}

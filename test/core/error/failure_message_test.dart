@@ -38,4 +38,36 @@ void main() {
       isNot(const NetworkFailure().message(en)),
     );
   });
+
+  group('AuthFailure', () {
+    final authMessages = <AuthError, String>{
+      AuthError.invalidCredentials: en.authErrorInvalidCredentials,
+      AuthError.emailAlreadyInUse: en.authErrorEmailInUse,
+      AuthError.weakPassword: en.authErrorWeakPassword,
+      AuthError.invalidEmail: en.authErrorInvalidEmail,
+      AuthError.userDisabled: en.authErrorUserDisabled,
+      AuthError.tooManyRequests: en.authErrorTooManyRequests,
+      AuthError.requiresRecentLogin: en.authErrorRequiresRecentLogin,
+      AuthError.cancelled: en.authErrorCancelled,
+      AuthError.unavailable: en.authErrorUnavailable,
+      AuthError.unknown: en.commonErrorGeneric,
+    };
+
+    test('covers every AuthError', () {
+      expect(authMessages.keys, unorderedEquals(AuthError.values));
+    });
+
+    for (final MapEntry(key: error, value: message) in authMessages.entries) {
+      test('$error -> "$message"', () {
+        expect(AuthFailure(error).message(en), message);
+      });
+    }
+
+    test('is translated', () {
+      expect(
+        const AuthFailure(AuthError.cancelled).message(ar),
+        ar.authErrorCancelled,
+      );
+    });
+  });
 }

@@ -21,7 +21,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navWatchlist => 'Watchlist';
 
   @override
-  String get navSettings => 'Settings';
+  String get navAccount => 'Account';
 
   @override
   String get moviesTrending => 'Trending';
@@ -63,6 +63,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonEmpty => 'Nothing here yet.';
+
+  @override
+  String get commonCancel => 'Cancel';
 
   @override
   String get commonShowMore => 'Show more';
@@ -170,6 +173,136 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsArabic => 'العربية';
+
+  @override
+  String get accountSettings => 'Settings';
+
+  @override
+  String get accountGuestTitle => 'Sign in to sync your watchlist';
+
+  @override
+  String get accountGuestBody =>
+      'Save your watchlist to your account and see it on every device you sign in on. You can keep using the app without an account.';
+
+  @override
+  String get accountSignIn => 'Sign in';
+
+  @override
+  String accountWatchlistCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count saved movies',
+      one: '1 saved movie',
+      zero: 'No saved movies',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountWatchlistSynced => 'Synced with your account';
+
+  @override
+  String get accountSignOut => 'Sign out';
+
+  @override
+  String get accountDelete => 'Delete account';
+
+  @override
+  String get accountDeleteConfirmTitle => 'Delete your account?';
+
+  @override
+  String get accountDeleteConfirmBody =>
+      'This permanently deletes your account and the watchlist saved in it. This can\'t be undone.';
+
+  @override
+  String get accountDeleteConfirm => 'Delete';
+
+  @override
+  String get accountDeleted => 'Your account was deleted.';
+
+  @override
+  String get authSignIn => 'Sign in';
+
+  @override
+  String get authSignUp => 'Create account';
+
+  @override
+  String get authName => 'Name (optional)';
+
+  @override
+  String get authEmail => 'Email';
+
+  @override
+  String get authPassword => 'Password';
+
+  @override
+  String get authShowPassword => 'Show password';
+
+  @override
+  String get authSwitchToSignUp => 'New here? Create an account';
+
+  @override
+  String get authSwitchToSignIn => 'Already have an account? Sign in';
+
+  @override
+  String get authForgotPassword => 'Forgot password?';
+
+  @override
+  String authResetEmailSent(String email) {
+    return 'If an account exists for $email, we sent it a link to reset the password.';
+  }
+
+  @override
+  String get authOr => 'or';
+
+  @override
+  String get authContinueWithGoogle => 'Continue with Google';
+
+  @override
+  String get authEmailRequired => 'Enter your email';
+
+  @override
+  String get authEmailInvalid => 'Enter a valid email address';
+
+  @override
+  String get authPasswordRequired => 'Enter your password';
+
+  @override
+  String authPasswordTooShort(int min) {
+    return 'Use at least $min characters';
+  }
+
+  @override
+  String get authErrorInvalidCredentials => 'Wrong email or password.';
+
+  @override
+  String get authErrorEmailInUse =>
+      'An account with this email already exists. Try signing in.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'This password is too weak. Choose a longer one.';
+
+  @override
+  String get authErrorInvalidEmail => 'This email address isn\'t valid.';
+
+  @override
+  String get authErrorUserDisabled => 'This account has been disabled.';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'Too many attempts. Wait a moment and try again.';
+
+  @override
+  String get authErrorRequiresRecentLogin =>
+      'For your security, sign out and sign in again, then delete your account.';
+
+  @override
+  String get authErrorCancelled => 'Sign-in was cancelled.';
+
+  @override
+  String get authErrorUnavailable => 'Sign-in isn\'t available right now.';
 
   @override
   String get tmdbAttribution =>

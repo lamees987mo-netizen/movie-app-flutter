@@ -12,6 +12,12 @@ abstract interface class AnalyticsService {
   Future<void> logWatchlistChanged({required int movieId, required bool added});
 
   Future<void> logSearch(String query);
+
+  /// An existing user signed in. [method] is e.g. `google` or `password`.
+  Future<void> logLogin(String method);
+
+  /// A new account was created. [method] is e.g. `password`.
+  Future<void> logSignUp(String method);
 }
 
 /// Sends events to Firebase Analytics.
@@ -38,10 +44,19 @@ class FirebaseAnalyticsService implements AnalyticsService {
   @override
   Future<void> logSearch(String query) =>
       _analytics.logSearch(searchTerm: query);
+
+  // Standard "login" and "sign_up" events, also for the default reports.
+  @override
+  Future<void> logLogin(String method) =>
+      _analytics.logLogin(loginMethod: method);
+
+  @override
+  Future<void> logSignUp(String method) =>
+      _analytics.logSignUp(signUpMethod: method);
 }
 
 /// Does nothing. Used in tests, and when Firebase is not set up (for
-/// example on iOS, which has no `GoogleService-Info.plist` in this repo).
+/// example on desktop).
 class NoopAnalyticsService implements AnalyticsService {
   const NoopAnalyticsService();
 
@@ -56,4 +71,10 @@ class NoopAnalyticsService implements AnalyticsService {
 
   @override
   Future<void> logSearch(String query) async {}
+
+  @override
+  Future<void> logLogin(String method) async {}
+
+  @override
+  Future<void> logSignUp(String method) async {}
 }
