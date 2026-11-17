@@ -21,3 +21,6 @@ const tUser = AppUser(
   email: 'lamees@example.com',
   displayName: 'Lamees Saad',
 );
+
+/// Email accounts may have no display name.
+const tEmailOnlyUser = AppUser(uid: 'u2', email: 'ann@example.com');
