@@ -27,3 +27,11 @@ abstract final class RouteNames {
   static const String settings = 'settings';
   static const String person = 'person';
 }
+
+/// The in-app trailer player: `/trailer/<youtube video id>`.
+abstract final class TrailerRoutes {
+  static const String path = '/trailer/:key';
+  static const String name = 'trailer';
+
+  static String pathFor(String youtubeKey) => '/trailer/$youtubeKey';
+}

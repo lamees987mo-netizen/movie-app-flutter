@@ -5,6 +5,8 @@ import 'package:movie_app/features/movies/presentation/navigation/movie_details_
 import 'package:movie_app/features/movies/presentation/pages/home_page.dart';
 import 'package:movie_app/features/movies/presentation/pages/movie_details_page.dart';
 import 'package:movie_app/features/movies/presentation/pages/see_all_page.dart';
+import 'package:movie_app/features/movies/presentation/pages/trailer_page.dart';
+import 'package:movie_app/features/movies/presentation/utils/youtube.dart';
 
 /// The Home tab.
 final StatefulShellBranch moviesBranch = StatefulShellBranch(
@@ -44,6 +46,21 @@ final List<RouteBase> moviesRoutes = [
     redirect: (context, state) => _category(state) == null ? Routes.home : null,
     builder: (context, state) => SeeAllPage(category: _category(state)!),
   ),
+  GoRoute(
+    path: TrailerRoutes.path,
+    name: TrailerRoutes.name,
+    // Only real YouTube ids (11 characters) reach the player.
+    redirect: (context, state) =>
+        _youtubeKey(state) == null ? Routes.home : null,
+    builder: (context, state) => TrailerPage(
+      youtubeKey: _youtubeKey(state)!,
+      // The movie title, when opened from the details page.
+      title: switch (state.extra) {
+        final String title => title,
+        _ => null,
+      },
+    ),
+  ),
 ];
 
 int? _movieId(GoRouterState state) =>
@@ -51,3 +68,9 @@ int? _movieId(GoRouterState state) =>
 
 MovieCategory? _category(GoRouterState state) =>
     MovieCategory.values.asNameMap()[state.pathParameters['category']];
+
+String? _youtubeKey(GoRouterState state) =>
+    switch (state.pathParameters['key']) {
+      final String key when isValidYoutubeKey(key) => key,
+      _ => null,
+    };
