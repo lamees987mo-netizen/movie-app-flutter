@@ -11,6 +11,12 @@ import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/error/failures.dart';
 import 'package:movie_app/core/router/app_router.dart';
 import 'package:movie_app/core/router/routes.dart';
+import 'package:movie_app/features/auth/domain/entities/app_user.dart';
+import 'package:movie_app/features/auth/presentation/cubit/account_cubit.dart';
+import 'package:movie_app/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:movie_app/features/auth/presentation/cubit/sign_in_cubit.dart';
+import 'package:movie_app/features/auth/presentation/pages/account_page.dart';
+import 'package:movie_app/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:movie_app/features/movies/domain/entities/movie_category.dart';
 import 'package:movie_app/features/movies/presentation/cubit/movie_details_cubit.dart';
 import 'package:movie_app/features/movies/presentation/cubit/movie_section_cubit.dart';
@@ -23,7 +29,6 @@ import 'package:movie_app/features/search/presentation/bloc/search_bloc.dart';
 import 'package:movie_app/features/search/presentation/pages/search_page.dart';
 import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
-import 'package:movie_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:movie_app/features/watchlist/presentation/cubit/watchlist_cubit.dart';
 import 'package:movie_app/features/watchlist/presentation/pages/watchlist_page.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
@@ -47,10 +52,18 @@ class MockWatchlistCubit extends MockCubit<WatchlistState>
 class MockSettingsCubit extends MockCubit<SettingsState>
     implements SettingsCubit {}
 
+class MockAuthCubit extends MockCubit<AuthState> implements AuthCubit {}
+
+class MockAccountCubit extends MockCubit<AccountState>
+    implements AccountCubit {}
+
+class MockSignInCubit extends MockCubit<SignInState> implements SignInCubit {}
+
 class MockConnectivity extends Mock implements Connectivity {}
 
 void main() {
   late MockSettingsCubit settings;
+  late MockAuthCubit auth;
 
   /// What each page asked `sl` for, to check the route parameters.
   late List<MovieCategory> seeAllCategories;
@@ -108,10 +121,22 @@ void main() {
         when(() => cubit.state).thenReturn(const WatchlistEmpty());
         when(cubit.load).thenAnswer((_) async {});
         return cubit;
+      })
+      ..registerFactory<AccountCubit>(() {
+        final cubit = MockAccountCubit();
+        when(() => cubit.state).thenReturn(const AccountIdle());
+        return cubit;
+      })
+      ..registerFactory<SignInCubit>(() {
+        final cubit = MockSignInCubit();
+        when(() => cubit.state).thenReturn(const SignInIdle());
+        return cubit;
       });
 
     settings = MockSettingsCubit();
     when(() => settings.state).thenReturn(const SettingsState());
+    auth = MockAuthCubit();
+    when(() => auth.state).thenReturn(const AuthSignedOut());
   });
 
   tearDown(sl.reset);
@@ -120,8 +145,11 @@ void main() {
     final router = createAppRouter();
     addTearDown(router.dispose);
     await tester.pumpWidget(
-      BlocProvider<SettingsCubit>.value(
-        value: settings,
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<SettingsCubit>.value(value: settings),
+          BlocProvider<AuthCubit>.value(value: auth),
+        ],
         child: MaterialApp.router(
           locale: const Locale('en'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -152,7 +180,7 @@ void main() {
     final tabs = <String, Type>{
       'Search': SearchPage,
       'Watchlist': WatchlistPage,
-      'Settings': SettingsPage,
+      'Account': AccountPage,
       'Home': HomePage,
     };
     for (final MapEntry(key: label, value: page) in tabs.entries) {
@@ -210,5 +238,40 @@ void main() {
     final page = tester.widget<SeeAllPage>(find.byType(SeeAllPage));
     expect(page.category, MovieCategory.topRated);
     expect(seeAllCategories, [MovieCategory.topRated]);
+  });
+
+  testWidgets('the old /settings path opens the Account tab', (tester) async {
+    final router = await pumpApp(tester);
+
+    router.go(Routes.settings);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AccountPage), findsOneWidget);
+    expect(find.byType(NavigationBar), findsOneWidget);
+  });
+
+  testWidgets('sign-in opens full screen for a guest', (tester) async {
+    final router = await pumpApp(tester);
+
+    unawaited(router.push(Routes.signIn));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SignInPage), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing);
+  });
+
+  testWidgets('sign-in redirects a signed-in user to the account', (
+    tester,
+  ) async {
+    when(
+      () => auth.state,
+    ).thenReturn(const AuthSignedIn(AppUser(uid: 'u1', email: 'a@b.co')));
+    final router = await pumpApp(tester);
+
+    router.go(Routes.signIn);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SignInPage), findsNothing);
+    expect(find.byType(AccountPage), findsOneWidget);
   });
 }

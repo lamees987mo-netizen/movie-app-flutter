@@ -35,7 +35,7 @@ void main() {
             branch('/home', 'Home'),
             branch('/search', 'Search'),
             branch('/watchlist', 'Watchlist'),
-            branch('/settings', 'Settings'),
+            branch('/account', 'Account'),
           ],
         ),
       ],
@@ -70,7 +70,7 @@ void main() {
   ) async {
     await pumpShell(tester);
 
-    for (final label in ['Home', 'Search', 'Watchlist', 'Settings']) {
+    for (final label in ['Home', 'Search', 'Watchlist', 'Account']) {
       expect(navLabel(label), findsOneWidget);
     }
     expect(find.text('Home page'), findsOneWidget);
@@ -83,7 +83,7 @@ void main() {
     const tabs = {
       'Search': 1,
       'Watchlist': 2,
-      'Settings': 3,
+      'Account': 3,
       'Home': 0,
     };
     for (final MapEntry(key: label, value: index) in tabs.entries) {

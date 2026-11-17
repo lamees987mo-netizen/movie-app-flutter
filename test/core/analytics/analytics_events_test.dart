@@ -3,6 +3,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:movie_app/core/analytics/analytics_service.dart';
 import 'package:movie_app/core/error/failures.dart';
 import 'package:movie_app/core/result/result.dart';
+import 'package:movie_app/features/auth/domain/entities/app_user.dart';
+import 'package:movie_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:movie_app/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:movie_app/features/movies/domain/repositories/movies_repository.dart';
 import 'package:movie_app/features/search/presentation/bloc/search_bloc.dart';
 import 'package:movie_app/features/watchlist/domain/repositories/watchlist_repository.dart';
@@ -29,6 +32,8 @@ void main() {
       ),
     ).thenAnswer((_) async {});
     when(() => analytics.logSearch(any())).thenAnswer((_) async {});
+    when(() => analytics.logLogin(any())).thenAnswer((_) async {});
+    when(() => analytics.logSignUp(any())).thenAnswer((_) async {});
   });
 
   group('watchlist', () {
@@ -99,7 +104,80 @@ void main() {
     await bloc.close();
   });
 
+  group('sign-in', () {
+    late _MockAuthRepository repository;
+
+    setUp(() {
+      repository = _MockAuthRepository();
+      when(
+        () => repository.signInWithGoogle(),
+      ).thenAnswer((_) async => const Success(_user));
+      when(
+        () => repository.signInWithEmail(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((_) async => const Success(_user));
+      when(
+        () => repository.signUpWithEmail(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+          name: any(named: 'name'),
+        ),
+      ).thenAnswer((_) async => const Success(_user));
+    });
+
+    SignInCubit build() =>
+        SignInCubit(repository: repository, analytics: analytics);
+
+    test('Google logs "login" with method google', () async {
+      final cubit = build();
+      await cubit.signInWithGoogle();
+
+      verify(() => analytics.logLogin('google')).called(1);
+      await cubit.close();
+    });
+
+    test('email sign-in logs "login" with method password', () async {
+      final cubit = build();
+      await cubit.signInWithEmail(email: 'a@b.co', password: 'pw');
+
+      verify(() => analytics.logLogin('password')).called(1);
+      await cubit.close();
+    });
+
+    test('sign-up logs "sign_up" with method password', () async {
+      final cubit = build();
+      await cubit.signUpWithEmail(email: 'a@b.co', password: 'secret1');
+
+      verify(() => analytics.logSignUp('password')).called(1);
+      verifyNever(() => analytics.logLogin(any()));
+      await cubit.close();
+    });
+
+    test('a failed sign-in logs nothing', () async {
+      when(() => repository.signInWithGoogle()).thenAnswer(
+        (_) async => const Err(AuthFailure(AuthError.cancelled)),
+      );
+      final cubit = build();
+      await cubit.signInWithGoogle();
+
+      verifyNever(() => analytics.logLogin(any()));
+      await cubit.close();
+    });
+  });
+
   test('the no-op service has no router observers', () {
     expect(const NoopAnalyticsService().navigatorObservers, isEmpty);
   });
+
+  test('the no-op service accepts every event', () async {
+    const noop = NoopAnalyticsService();
+    await expectLater(noop.logLogin('google'), completes);
+    await expectLater(noop.logSignUp('password'), completes);
+  });
 }
+
+const _user = AppUser(uid: 'u1');
+
+class _MockAuthRepository extends Mock implements AuthRepository {}

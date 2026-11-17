@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:movie_app/core/router/app_shell.dart';
 import 'package:movie_app/core/router/routes.dart';
 import 'package:movie_app/core/widgets/error_view.dart';
+import 'package:movie_app/features/auth/auth_routes.dart';
 import 'package:movie_app/features/movies/movies_routes.dart';
 import 'package:movie_app/features/person/person_routes.dart';
 import 'package:movie_app/features/search/search_routes.dart';
@@ -32,12 +33,13 @@ GoRouter createAppRouter({List<NavigatorObserver> observers = const []}) {
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),
         // The order must match the destinations in AppShell.
-        branches: [moviesBranch, searchBranch, watchlistBranch, settingsBranch],
+        branches: [moviesBranch, searchBranch, watchlistBranch, accountBranch],
       ),
       ...moviesRoutes,
       ...personRoutes,
       ...searchRoutes,
       ...watchlistRoutes,
+      ...authRoutes,
       ...settingsRoutes,
     ],
   );

@@ -122,11 +122,11 @@ abstract class AppLocalizations {
   /// **'Watchlist'**
   String get navWatchlist;
 
-  /// No description provided for @navSettings.
+  /// Bottom navigation tab with sign-in, profile and settings.
   ///
   /// In en, this message translates to:
-  /// **'Settings'**
-  String get navSettings;
+  /// **'Account'**
+  String get navAccount;
 
   /// No description provided for @moviesTrending.
   ///
@@ -205,6 +205,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing here yet.'**
   String get commonEmpty;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get commonCancel;
 
   /// Button that expands a long, cut-off text.
   ///
@@ -403,6 +409,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'العربية'**
   String get settingsArabic;
+
+  /// Title of the theme and language section on the account page.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get accountSettings;
+
+  /// No description provided for @accountGuestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to sync your watchlist'**
+  String get accountGuestTitle;
+
+  /// Shown to guests on the account page, explaining why to sign in.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your watchlist to your account and see it on every device you sign in on. You can keep using the app without an account.'**
+  String get accountGuestBody;
+
+  /// No description provided for @accountSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get accountSignIn;
+
+  /// Number of movies in the signed-in user's watchlist.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No saved movies} =1{1 saved movie} other{{count} saved movies}}'**
+  String accountWatchlistCount(int count);
+
+  /// No description provided for @accountWatchlistSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Synced with your account'**
+  String get accountWatchlistSynced;
+
+  /// No description provided for @accountSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get accountSignOut;
+
+  /// No description provided for @accountDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDelete;
+
+  /// No description provided for @accountDeleteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get accountDeleteConfirmTitle;
+
+  /// No description provided for @accountDeleteConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This permanently deletes your account and the watchlist saved in it. This can\'t be undone.'**
+  String get accountDeleteConfirmBody;
+
+  /// Confirm button of the delete-account dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get accountDeleteConfirm;
+
+  /// No description provided for @accountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account was deleted.'**
+  String get accountDeleted;
+
+  /// No description provided for @authSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get authSignIn;
+
+  /// No description provided for @authSignUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get authSignUp;
+
+  /// No description provided for @authName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (optional)'**
+  String get authName;
+
+  /// No description provided for @authEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get authEmail;
+
+  /// No description provided for @authPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get authPassword;
+
+  /// Screen-reader label of the eye button in the password field.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get authShowPassword;
+
+  /// No description provided for @authSwitchToSignUp.
+  ///
+  /// In en, this message translates to:
+  /// **'New here? Create an account'**
+  String get authSwitchToSignUp;
+
+  /// No description provided for @authSwitchToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Sign in'**
+  String get authSwitchToSignIn;
+
+  /// No description provided for @authForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get authForgotPassword;
+
+  /// Shown after asking for a password reset email.
+  ///
+  /// In en, this message translates to:
+  /// **'If an account exists for {email}, we sent it a link to reset the password.'**
+  String authResetEmailSent(String email);
+
+  /// Between the email form and the Google button.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get authOr;
+
+  /// No description provided for @authContinueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get authContinueWithGoogle;
+
+  /// No description provided for @authEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get authEmailRequired;
+
+  /// No description provided for @authEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get authEmailInvalid;
+
+  /// No description provided for @authPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get authPasswordRequired;
+
+  /// Validation error when a new password is too short.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least {min} characters'**
+  String authPasswordTooShort(int min);
+
+  /// No description provided for @authErrorInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong email or password.'**
+  String get authErrorInvalidCredentials;
+
+  /// No description provided for @authErrorEmailInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email already exists. Try signing in.'**
+  String get authErrorEmailInUse;
+
+  /// No description provided for @authErrorWeakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'This password is too weak. Choose a longer one.'**
+  String get authErrorWeakPassword;
+
+  /// No description provided for @authErrorInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'This email address isn\'t valid.'**
+  String get authErrorInvalidEmail;
+
+  /// No description provided for @authErrorUserDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been disabled.'**
+  String get authErrorUserDisabled;
+
+  /// No description provided for @authErrorTooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Wait a moment and try again.'**
+  String get authErrorTooManyRequests;
+
+  /// No description provided for @authErrorRequiresRecentLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'For your security, sign out and sign in again, then delete your account.'**
+  String get authErrorRequiresRecentLogin;
+
+  /// No description provided for @authErrorCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in was cancelled.'**
+  String get authErrorCancelled;
+
+  /// No description provided for @authErrorUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in isn\'t available right now.'**
+  String get authErrorUnavailable;
 
   /// No description provided for @tmdbAttribution.
   ///

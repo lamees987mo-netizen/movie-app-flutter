@@ -5,6 +5,7 @@ import 'package:hive_ce/hive_ce.dart';
 import 'package:movie_app/core/error/exceptions.dart';
 import 'package:movie_app/features/movies/data/models/movie_model.dart';
 import 'package:movie_app/features/watchlist/data/datasources/watchlist_local_data_source.dart';
+import 'package:movie_app/features/watchlist/data/models/saved_movie_model.dart';
 
 /// Uses a real Hive box in a temporary folder (no mocks), so the storage
 /// format and the `Map<dynamic, dynamic>` conversion are really tested.
@@ -119,5 +120,44 @@ void main() {
     await box.close();
 
     await expectLater(dataSource.add(dune), throwsA(isA<CacheException>()));
+  });
+
+  group('for the cloud sync', () {
+    test('getAllSaved returns each movie with its added_at', () async {
+      await dataSource.add(dune);
+      now = now.add(const Duration(minutes: 1));
+      await dataSource.add(insideOut);
+
+      final saved = dataSource.getAllSaved();
+
+      expect(saved.map((e) => e.movie.id), [insideOut.id, dune.id]);
+      expect(saved.last.addedAt, DateTime(2024));
+    });
+
+    test('putAll keeps the given dates (not the clock)', () async {
+      await dataSource.putAll([
+        SavedMovieModel(movie: dune, addedAt: DateTime(2020)),
+        SavedMovieModel(movie: insideOut, addedAt: DateTime(2021)),
+      ]);
+
+      final saved = dataSource.getAllSaved();
+      expect(saved.map((e) => e.movie.id), [insideOut.id, dune.id]);
+      expect(saved.map((e) => e.addedAt), [DateTime(2021), DateTime(2020)]);
+    });
+
+    test('clear removes every movie', () async {
+      await dataSource.add(dune);
+      await dataSource.add(insideOut);
+
+      await dataSource.clear();
+
+      expect(dataSource.getAll(), isEmpty);
+    });
+
+    test('clear throws a CacheException when Hive fails', () async {
+      await box.close();
+
+      await expectLater(dataSource.clear(), throwsA(isA<CacheException>()));
+    });
   });
 }

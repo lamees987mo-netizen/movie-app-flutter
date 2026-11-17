@@ -1,3 +1,5 @@
+import 'package:movie_app/core/error/failures.dart' show AuthError;
+
 /// Exceptions thrown by the data layer (data sources).
 ///
 /// Repositories catch them and turn them into a `Failure`, so nothing above
@@ -33,4 +35,17 @@ final class CacheException extends AppException {
 
   @override
   String toString() => 'CacheException($message)';
+}
+
+/// Firebase Auth or Google Sign-In refused the request.
+///
+/// The data source already translates the provider's error code into an
+/// [AuthError], so the repository only wraps it in an `AuthFailure`.
+final class AuthException extends AppException {
+  const AuthException(this.error);
+
+  final AuthError error;
+
+  @override
+  String toString() => 'AuthException($error)';
 }

@@ -21,7 +21,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navWatchlist => 'قائمة المشاهدة';
 
   @override
-  String get navSettings => 'الإعدادات';
+  String get navAccount => 'حسابي';
 
   @override
   String get moviesTrending => 'الأكثر رواجًا';
@@ -62,6 +62,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get commonEmpty => 'لا يوجد شيء هنا بعد.';
+
+  @override
+  String get commonCancel => 'إلغاء';
 
   @override
   String get commonShowMore => 'عرض المزيد';
@@ -177,6 +180,139 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get settingsArabic => 'العربية';
+
+  @override
+  String get accountSettings => 'الإعدادات';
+
+  @override
+  String get accountGuestTitle => 'سجّل الدخول لمزامنة قائمة المشاهدة';
+
+  @override
+  String get accountGuestBody =>
+      'احفظ قائمة المشاهدة في حسابك وشاهدها على أي جهاز تسجّل الدخول منه. ويمكنك متابعة استخدام التطبيق بدون حساب.';
+
+  @override
+  String get accountSignIn => 'تسجيل الدخول';
+
+  @override
+  String accountWatchlistCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count فيلم محفوظ',
+      many: '$count فيلمًا محفوظًا',
+      few: '$count أفلام محفوظة',
+      two: 'فيلمان محفوظان',
+      one: 'فيلم محفوظ واحد',
+      zero: 'لا توجد أفلام محفوظة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountWatchlistSynced => 'متزامنة مع حسابك';
+
+  @override
+  String get accountSignOut => 'تسجيل الخروج';
+
+  @override
+  String get accountDelete => 'حذف الحساب';
+
+  @override
+  String get accountDeleteConfirmTitle => 'حذف حسابك؟';
+
+  @override
+  String get accountDeleteConfirmBody =>
+      'سيؤدي هذا إلى حذف حسابك وقائمة المشاهدة المحفوظة فيه نهائيًا، ولا يمكن التراجع عن ذلك.';
+
+  @override
+  String get accountDeleteConfirm => 'حذف';
+
+  @override
+  String get accountDeleted => 'تم حذف حسابك.';
+
+  @override
+  String get authSignIn => 'تسجيل الدخول';
+
+  @override
+  String get authSignUp => 'إنشاء حساب';
+
+  @override
+  String get authName => 'الاسم (اختياري)';
+
+  @override
+  String get authEmail => 'البريد الإلكتروني';
+
+  @override
+  String get authPassword => 'كلمة المرور';
+
+  @override
+  String get authShowPassword => 'إظهار كلمة المرور';
+
+  @override
+  String get authSwitchToSignUp => 'جديد هنا؟ أنشئ حسابًا';
+
+  @override
+  String get authSwitchToSignIn => 'لديك حساب بالفعل؟ سجّل الدخول';
+
+  @override
+  String get authForgotPassword => 'نسيت كلمة المرور؟';
+
+  @override
+  String authResetEmailSent(String email) {
+    return 'إذا كان هناك حساب مرتبط بـ $email، فقد أرسلنا إليه رابطًا لإعادة تعيين كلمة المرور.';
+  }
+
+  @override
+  String get authOr => 'أو';
+
+  @override
+  String get authContinueWithGoogle => 'المتابعة باستخدام Google';
+
+  @override
+  String get authEmailRequired => 'أدخل بريدك الإلكتروني';
+
+  @override
+  String get authEmailInvalid => 'أدخل بريدًا إلكترونيًا صحيحًا';
+
+  @override
+  String get authPasswordRequired => 'أدخل كلمة المرور';
+
+  @override
+  String authPasswordTooShort(int min) {
+    return 'استخدم $min أحرف على الأقل';
+  }
+
+  @override
+  String get authErrorInvalidCredentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get authErrorEmailInUse =>
+      'يوجد حساب بهذا البريد الإلكتروني بالفعل. جرّب تسجيل الدخول.';
+
+  @override
+  String get authErrorWeakPassword => 'كلمة المرور ضعيفة جدًا. اختر كلمة أطول.';
+
+  @override
+  String get authErrorInvalidEmail => 'عنوان البريد الإلكتروني غير صالح.';
+
+  @override
+  String get authErrorUserDisabled => 'تم إيقاف هذا الحساب.';
+
+  @override
+  String get authErrorTooManyRequests =>
+      'محاولات كثيرة جدًا. انتظر قليلًا ثم حاول مرة أخرى.';
+
+  @override
+  String get authErrorRequiresRecentLogin =>
+      'لحماية حسابك، سجّل الخروج ثم سجّل الدخول مرة أخرى، وبعدها احذف حسابك.';
+
+  @override
+  String get authErrorCancelled => 'تم إلغاء تسجيل الدخول.';
+
+  @override
+  String get authErrorUnavailable => 'تسجيل الدخول غير متاح حاليًا.';
 
   @override
   String get tmdbAttribution =>

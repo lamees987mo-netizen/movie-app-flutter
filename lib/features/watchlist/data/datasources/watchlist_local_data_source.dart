@@ -1,6 +1,7 @@
 import 'package:hive_ce/hive_ce.dart';
 import 'package:movie_app/core/error/exceptions.dart';
 import 'package:movie_app/features/movies/data/models/movie_model.dart';
+import 'package:movie_app/features/watchlist/data/models/saved_movie_model.dart';
 
 /// Reads and writes the watchlist in the Hive `watchlist` box.
 ///
@@ -10,20 +11,31 @@ abstract interface class WatchlistLocalDataSource {
   /// The saved movies, most recently added first.
   List<MovieModel> getAll();
 
+  /// Like [getAll], but with the date each movie was saved. Used by the
+  /// cloud sync, which copies entries between devices without changing
+  /// their order.
+  List<SavedMovieModel> getAllSaved();
+
   bool contains(int movieId);
 
+  /// Saves [movie] with the current time as its `added_at`.
   Future<void> add(MovieModel movie);
 
+  /// Saves entries that already have an `added_at` (e.g. downloaded from
+  /// the cloud), keeping their dates.
+  Future<void> putAll(List<SavedMovieModel> entries);
+
   Future<void> remove(int movieId);
+
+  /// Removes every movie (used when the user signs out).
+  Future<void> clear();
 
   /// Emits (without data) after every change to the box.
   Stream<void> changes();
 }
 
-/// Storage format: key = movie id, value = `MovieModel.toJson()` plus an
-/// extra `added_at` field (milliseconds since epoch) used to sort the list
-/// newest first. `MovieModel.fromJson` ignores the extra field, so no type
-/// adapters are needed.
+/// Storage format: key = movie id, value = [SavedMovieModel.toJson] (the
+/// movie's JSON plus `added_at`), so no type adapters are needed.
 class WatchlistLocalDataSourceImpl implements WatchlistLocalDataSource {
   /// [clock] is only replaced in tests, to control the `added_at` order.
   WatchlistLocalDataSourceImpl(this._box, {DateTime Function()? clock})
@@ -32,18 +44,21 @@ class WatchlistLocalDataSourceImpl implements WatchlistLocalDataSource {
   final Box<dynamic> _box;
   final DateTime Function() _clock;
 
-  static const String addedAtKey = 'added_at';
+  static const String addedAtKey = SavedMovieModel.addedAtKey;
 
   @override
-  List<MovieModel> getAll() => _guard(() {
-    final entries = _box.values.map(_toJsonMap).toList()
+  List<MovieModel> getAll() =>
+      getAllSaved().map((entry) => entry.movie).toList();
+
+  @override
+  List<SavedMovieModel> getAllSaved() => _guard(() {
+    return _box.values.map(_toJsonMap).map(SavedMovieModel.fromJson).toList()
       ..sort((a, b) {
-        final byDate = _addedAt(b).compareTo(_addedAt(a));
+        final byDate = b.addedAt.compareTo(a.addedAt);
         // Same timestamp: fall back to the id, so the order stays stable.
         if (byDate != 0) return byDate;
-        return (b['id'] as num).compareTo(a['id'] as num);
+        return b.movie.id.compareTo(a.movie.id);
       });
-    return entries.map(MovieModel.fromJson).toList();
   });
 
   @override
@@ -51,14 +66,24 @@ class WatchlistLocalDataSourceImpl implements WatchlistLocalDataSource {
 
   @override
   Future<void> add(MovieModel movie) => _guardAsync(
-    () => _box.put(movie.id, <String, dynamic>{
-      ...movie.toJson(),
-      addedAtKey: _clock().millisecondsSinceEpoch,
+    () => _box.put(
+      movie.id,
+      SavedMovieModel(movie: movie, addedAt: _clock()).toJson(),
+    ),
+  );
+
+  @override
+  Future<void> putAll(List<SavedMovieModel> entries) => _guardAsync(
+    () => _box.putAll({
+      for (final entry in entries) entry.movie.id: entry.toJson(),
     }),
   );
 
   @override
   Future<void> remove(int movieId) => _guardAsync(() => _box.delete(movieId));
+
+  @override
+  Future<void> clear() => _guardAsync(_box.clear);
 
   @override
   Stream<void> changes() => _box.watch().map((_) {});
@@ -75,9 +100,6 @@ class WatchlistLocalDataSourceImpl implements WatchlistLocalDataSource {
       (dynamic key, dynamic v) => MapEntry(key.toString(), v),
     );
   }
-
-  static int _addedAt(Map<String, dynamic> json) =>
-      (json[addedAtKey] as num?)?.toInt() ?? 0;
 
   T _guard<T>(T Function() action) {
     try {
