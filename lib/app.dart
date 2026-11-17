@@ -6,6 +6,7 @@ import 'package:movie_app/core/analytics/analytics_service.dart';
 import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/router/app_router.dart';
 import 'package:movie_app/core/theme/app_theme.dart';
+import 'package:movie_app/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
@@ -33,10 +34,14 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    // `.value`: the cubit is a get_it singleton (also used by Dio), so the
-    // provider must not close it.
-    return BlocProvider.value(
-      value: sl<SettingsCubit>(),
+    // `.value`: both cubits are get_it singletons (SettingsCubit is also
+    // used by Dio), so the providers must not close them.
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: sl<SettingsCubit>()),
+        // The signed-in user, for every screen (and the sign-in redirect).
+        BlocProvider.value(value: sl<AuthCubit>()),
+      ],
       child: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, settings) {
           return MaterialApp.router(
