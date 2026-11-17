@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:movie_app/core/di/injection.dart';
 import 'package:movie_app/core/error/failures.dart';
 import 'package:movie_app/core/widgets/movie_poster_card.dart';
 import 'package:movie_app/features/movies/presentation/navigation/movie_details_args.dart';
@@ -11,6 +12,8 @@ import 'package:movie_app/features/person/domain/entities/person.dart';
 import 'package:movie_app/features/person/presentation/cubit/person_cubit.dart';
 import 'package:movie_app/features/person/presentation/navigation/person_args.dart';
 import 'package:movie_app/features/person/presentation/pages/person_page.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -23,6 +26,8 @@ void main() {
   late MockPersonCubit cubit;
 
   setUp(() => cubit = MockPersonCubit());
+
+  pageTests();
 
   Future<void> pumpView(
     WidgetTester tester,
@@ -160,5 +165,42 @@ void main() {
     final args = openedExtra! as MovieDetailsArgs;
     expect(args.movie, tKnownFor1);
     expect(args.heroTag, 'person-${tPerson.id}-${tKnownFor1.id}');
+  });
+}
+
+class MockSettingsCubit extends MockCubit<SettingsState>
+    implements SettingsCubit {}
+
+/// `PersonPage` itself: it gets its cubit from `sl` and reloads when the
+/// app language changes (TMDB returns the biography in that language).
+void pageTests() {
+  testWidgets('PersonPage reloads when the language changes', (tester) async {
+    final personCubit = MockPersonCubit();
+    when(() => personCubit.state).thenReturn(const PersonLoading());
+    when(personCubit.load).thenAnswer((_) async {});
+    sl.registerFactoryParam<PersonCubit, int, void>((_, _) => personCubit);
+    addTearDown(() => sl.unregister<PersonCubit>());
+
+    final settings = MockSettingsCubit();
+    const english = SettingsState();
+    const arabic = SettingsState(locale: Locale('ar'));
+    whenListen(
+      settings,
+      Stream<SettingsState>.fromIterable([arabic]),
+      initialState: english,
+    );
+
+    await tester.pumpWidget(
+      wrapWithApp(
+        BlocProvider<SettingsCubit>.value(
+          value: settings,
+          child: const PersonPage(personId: 287),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // Once when the page opens, once more for the new language.
+    verify(personCubit.load).called(2);
   });
 }

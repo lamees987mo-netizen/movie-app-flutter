@@ -14,6 +14,8 @@ import 'package:movie_app/features/person/presentation/cubit/person_cubit.dart';
 import 'package:movie_app/features/person/presentation/navigation/person_args.dart';
 import 'package:movie_app/features/person/presentation/widgets/expandable_text.dart';
 import 'package:movie_app/features/person/presentation/widgets/person_header.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -42,7 +44,13 @@ class PersonPage extends StatelessWidget {
         unawaited(cubit.load());
         return cubit;
       },
-      child: PersonView(preview: preview),
+      // TMDB returns the biography and titles in the app's language, so
+      // reload when it changes (like Home and Search do).
+      child: BlocListener<SettingsCubit, SettingsState>(
+        listenWhen: (previous, current) => previous.locale != current.locale,
+        listener: (context, _) => unawaited(context.read<PersonCubit>().load()),
+        child: PersonView(preview: preview),
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
@@ -12,7 +13,12 @@ import 'package:movie_app/features/person/person_routes.dart';
 import 'package:movie_app/features/person/presentation/cubit/person_cubit.dart';
 import 'package:movie_app/features/person/presentation/navigation/person_args.dart';
 import 'package:movie_app/features/person/presentation/pages/person_page.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
+
+class _MockSettingsCubit extends MockCubit<SettingsState>
+    implements SettingsCubit {}
 
 class MockPersonCubit extends MockCubit<PersonState> implements PersonCubit {}
 
@@ -41,12 +47,19 @@ void main() {
       ],
     );
     addTearDown(router.dispose);
+    // In the app, SettingsCubit is provided above MaterialApp; PersonPage
+    // listens to it to reload when the language changes.
+    final settings = _MockSettingsCubit();
+    when(() => settings.state).thenReturn(const SettingsState());
     await tester.pumpWidget(
-      MaterialApp.router(
-        locale: const Locale('en'),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        routerConfig: router,
+      BlocProvider<SettingsCubit>.value(
+        value: settings,
+        child: MaterialApp.router(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+        ),
       ),
     );
     return router;
