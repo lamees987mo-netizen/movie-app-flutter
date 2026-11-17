@@ -31,8 +31,13 @@ Rules for everyone (people and agents) working on this codebase.
   `xRoutes` = full-screen routes above it. Paths/names are in
   `core/router/routes.dart`; build paths with `Routes.movieDetailsPath(id)`
   and `Routes.seeAllPath(category.name)`.
-- `SettingsCubit` is provided above `MaterialApp`, so any page can use
-  `context.read<SettingsCubit>()`.
+- `SettingsCubit` and `AuthCubit` are provided above `MaterialApp`, so any
+  page can use `context.read<SettingsCubit>()` or check
+  `context.read<AuthCubit>().state is AuthSignedIn`.
+- Anything that uses Firebase needs a fallback for when it is not running
+  (tests, desktop): `initDependencies` checks `Firebase.apps` once and
+  passes the answer to the features (see `NoopAnalyticsService`,
+  `UnavailableAuthRepository`, `NoUserCloudData`).
 
 ## Architecture
 
@@ -59,7 +64,7 @@ Rules for everyone (people and agents) working on this codebase.
 
 - All user-facing text comes from `AppLocalizations.of(context)`
   (keys are prefixed by feature: `movies*`, `details*`, `search*`,
-  `watchlist*`, `settings*`, `common*`, `nav*`).
+  `watchlist*`, `settings*`, `account*`, `auth*`, `common*`, `nav*`).
 - RTL: use `EdgeInsetsDirectional`, `AlignmentDirectional`,
   `PositionedDirectional`, `start`/`end` (never `left`/`right`).
 - Spacing from `AppSpacing`; colors from `Theme.of(context).colorScheme`.

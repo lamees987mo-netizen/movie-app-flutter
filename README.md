@@ -31,11 +31,17 @@ Analytics, and full Arabic (RTL) and English support, with 319 tests.
   best-known movies.
 - **Search**: results as you type with a 400 ms debounce, and more results
   as you scroll.
-- **Watchlist**: saved on the device with Hive, so it works offline.
+- **Watchlist**: saved on the device with Hive, so it works offline. When
+  you are signed in it is also synced to your account (Firestore), so it
+  follows you to other devices.
+- **Account (optional)**: sign in with Google or with email + password
+  (including "Forgot password"), or keep using the app as a guest. The
+  Account tab shows your profile and watchlist count, the settings,
+  "Sign out" and "Delete account" (which also deletes your synced data).
 - **Offline mode**: Home sections and every movie you opened are cached per
   language. Without internet you still see them, with a "You're offline" bar;
   everything refreshes by itself when the connection is back.
-- **Settings**: light, dark or system theme, and Arabic or English (starts in
+- **Settings** (in the Account tab): light, dark or system theme, and Arabic or English (starts in
   the phone's language). Movie titles, overviews and posters also switch
   language.
 - **Crash reports and analytics** with Firebase (screens, watchlist changes,
@@ -53,6 +59,7 @@ Analytics, and full Arabic (RTL) and English support, with 319 tests.
 | Models | `json_serializable`, `equatable`, Dart 3 `sealed` classes |
 | Localization | `gen-l10n` (ARB files), RTL layout |
 | Testing | `flutter_test`, `bloc_test`, `mocktail`, `integration_test` |
+| Accounts & sync | Firebase Auth (Google, email), Cloud Firestore |
 | Monitoring | Firebase Crashlytics + Analytics |
 | Build | Android flavors (`dev` / `prod`), `movieapp://` deep links |
 | Linting | `very_good_analysis` |
@@ -78,8 +85,9 @@ lib/
 │   ├── movies/     # data / domain / presentation: home, see all, details
 │   ├── person/     # actor page
 │   ├── search/     # Bloc with debounce and pagination
-│   ├── watchlist/  # Hive repository + cubits
-│   └── settings/   # theme + language Cubit
+│   ├── auth/       # sign-in, Account tab, delete account
+│   ├── watchlist/  # Hive repository + cubits, Firestore sync
+│   └── settings/   # theme + language Cubit and panel
 └── l10n/        # en / ar ARB files (+ generated code)
 ```
 
@@ -88,7 +96,8 @@ lib/
   `Failure` is a sealed class. A `switch` over it must handle every case,
   so the compiler catches a forgotten error type.
 - **Cubits call repositories directly.** A use case exists only where there
-  is logic to hold (`GetMovieDetails`), not as a pass-through for every call.
+  is logic to hold (`GetMovieDetails`, `DeleteAccount`), not as a
+  pass-through for every call.
 
 ## Why I chose…
 
@@ -120,6 +129,19 @@ lib/
   `google-services.json`; iOS gets its Firebase options from Dart code
   (`AppFirebaseOptions`), because adding the plist to the Xcode project
   needs a Mac.
+- **Watchlist sync without changing the screens.** Hive stays the source
+  of truth (fast, offline). A `SyncedWatchlistRepository` wraps the local
+  one with the same interface and also writes each change to Firestore at
+  `users/{uid}/watchlist/{movieId}`, without making the button wait. On
+  sign-in the two lists are merged (union); on sign-out the phone's copy is
+  cleared, so the next person using the phone doesn't see it. Firestore
+  rules (`firestore.rules`) let each user touch only their own data.
+- **Guest mode first.** Signing in is optional. Without Firebase (tests,
+  desktop) an "unavailable" auth repository is used, like the no-op
+  analytics, so the app and its tests run unchanged.
+- **Deleting an account deletes its data first**, while the user is still
+  allowed to (by the rules). If Firebase then refuses (it asks for a recent
+  sign-in), the data is uploaded again from the phone, so nothing is lost.
 - **No `freezed`.** Dart 3 `sealed` classes and `equatable` cover states and
   failures with less generated code.
 - **Generated code is committed.** A fresh clone builds without running
