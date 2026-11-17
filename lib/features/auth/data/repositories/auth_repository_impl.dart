@@ -58,13 +58,13 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       return Success(await action());
     } on AuthException catch (error) {
-      return Err(AuthFailure(error.error));
+      return Err<T>(AuthFailure(error.error));
     } on NetworkException {
-      return const Err(NetworkFailure());
+      return Err<T>(const NetworkFailure());
     } on Object catch (error, stackTrace) {
       // Not expected: the data source translates every error.
       log('Unexpected auth error', error: error, stackTrace: stackTrace);
-      return const Err(UnknownFailure());
+      return Err<T>(const UnknownFailure());
     }
   }
 }
