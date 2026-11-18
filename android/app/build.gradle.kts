@@ -69,6 +69,14 @@ android {
             signingConfig =
                 signingConfigs.findByName("release")
                     ?: signingConfigs.getByName("debug")
+            // Uploading the R8 mapping file to Crashlytics needs internet at
+            // build time and only helps read Java/Kotlin stack traces (the app
+            // code is Dart). Off by default so release builds work offline;
+            // turn on with: flutter build apk ... -P crashlyticsUpload=true
+            configure<com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension> {
+                mappingFileUploadEnabled =
+                    project.hasProperty("crashlyticsUpload")
+            }
         }
     }
 }
