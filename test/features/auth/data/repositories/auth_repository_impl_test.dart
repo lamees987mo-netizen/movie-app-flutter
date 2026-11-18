@@ -82,6 +82,18 @@ void main() {
       expect(await repository.signOut(), const Success<void>(null));
       expect(await repository.deleteAccount(), const Success<void>(null));
     });
+
+    test('updateDisplayName returns the updated user', () async {
+      const renamed = AppUser(uid: 'u1', email: 'a@b.co', displayName: 'Ann');
+      when(
+        () => dataSource.updateDisplayName('Ann'),
+      ).thenAnswer((_) async => renamed);
+
+      expect(
+        await repository.updateDisplayName('Ann'),
+        const Success(renamed),
+      );
+    });
   });
 
   group('failures', () {
@@ -100,6 +112,17 @@ void main() {
       when(() => dataSource.signOut()).thenThrow(const NetworkException());
 
       expect(await repository.signOut(), const Err<void>(NetworkFailure()));
+    });
+
+    test('updateDisplayName failures become an Err', () async {
+      when(
+        () => dataSource.updateDisplayName(any()),
+      ).thenThrow(const NetworkException());
+
+      expect(
+        await repository.updateDisplayName('Ann'),
+        const Err<AppUser>(NetworkFailure()),
+      );
     });
 
     test('anything else -> UnknownFailure', () async {
@@ -137,6 +160,10 @@ void main() {
       expect(
         await unavailable.sendPasswordResetEmail('a'),
         const Err<void>(failure),
+      );
+      expect(
+        await unavailable.updateDisplayName('a'),
+        const Err<AppUser>(failure),
       );
       expect(await unavailable.signOut(), const Err<void>(failure));
       expect(await unavailable.deleteAccount(), const Err<void>(failure));

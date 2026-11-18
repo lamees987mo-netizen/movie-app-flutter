@@ -31,6 +31,8 @@ abstract interface class AuthRemoteDataSource {
 
   Future<void> sendPasswordResetEmail(String email);
 
+  Future<AppUser> updateDisplayName(String name);
+
   Future<void> signOut();
 
   Future<void> deleteAccount();
@@ -94,6 +96,15 @@ class FirebaseAuthDataSource implements AuthRemoteDataSource {
       _guard(() => _auth.sendPasswordResetEmail(email: email));
 
   @override
+  Future<AppUser> updateDisplayName(String name) => _guard(() async {
+    final user = _auth.currentUser;
+    if (user == null) throw const AuthException(AuthError.unknown);
+    await user.updateDisplayName(name);
+    // `userChanges` emits the new name too, so every screen updates.
+    return _requireUser(_auth.currentUser ?? user);
+  });
+
+  @override
   Future<void> signOut() => _guard(() async {
     await _google.signOut();
     await _auth.signOut();
@@ -114,7 +125,21 @@ class FirebaseAuthDataSource implements AuthRemoteDataSource {
           email: user.email,
           displayName: user.displayName,
           photoUrl: user.photoURL,
+          signInMethod: _signInMethodOf(user),
         );
+
+  /// A user can have several providers (e.g. Google linked to an email
+  /// account). Email wins, because then there is a password to change.
+  static SignInMethod _signInMethodOf(User user) {
+    final providers = user.providerData.map((info) => info.providerId);
+    if (providers.contains(EmailAuthProvider.PROVIDER_ID)) {
+      return SignInMethod.email;
+    }
+    if (providers.contains(GoogleAuthProvider.PROVIDER_ID)) {
+      return SignInMethod.google;
+    }
+    return SignInMethod.unknown;
+  }
 
   static AppUser _requireUser(User? user) =>
       _toAppUser(user) ?? (throw const AuthException(AuthError.unknown));

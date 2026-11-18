@@ -41,6 +41,10 @@ class UnavailableAuthRepository implements AuthRepository {
       const Err(_unavailable);
 
   @override
+  Future<Result<AppUser>> updateDisplayName(String name) async =>
+      const Err(_unavailable);
+
+  @override
   Future<Result<void>> signOut() async => const Err(_unavailable);
 
   @override

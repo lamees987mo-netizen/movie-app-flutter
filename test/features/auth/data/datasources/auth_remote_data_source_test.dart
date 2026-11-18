@@ -142,6 +142,72 @@ void main() {
       verify(() => google.signOut()).called(1);
     });
 
+    test('signUpWithEmail users sign in with email', () async {
+      final dataSource = FirebaseAuthDataSource(
+        fake.MockFirebaseAuth(),
+        google,
+      );
+
+      final user = await dataSource.signUpWithEmail(
+        email: 'new@example.com',
+        password: 'secret1',
+      );
+
+      expect(user.signInMethod, SignInMethod.email);
+    });
+
+    test('maps the provider to the sign-in method', () {
+      AppUser? mapWith(List<String> providerIds) => FirebaseAuthDataSource(
+        fake.MockFirebaseAuth(
+          signedIn: true,
+          mockUser: fake.MockUser(
+            uid: 'u',
+            providerData: [
+              for (final id in providerIds) _userInfo(providerId: id),
+            ],
+          ),
+        ),
+        google,
+      ).currentUser;
+
+      expect(mapWith(['google.com'])?.signInMethod, SignInMethod.google);
+      expect(mapWith(['password'])?.signInMethod, SignInMethod.email);
+      // Google linked to an email account: it still has a password.
+      expect(
+        mapWith(['google.com', 'password'])?.signInMethod,
+        SignInMethod.email,
+      );
+      expect(mapWith([])?.signInMethod, SignInMethod.unknown);
+    });
+
+    test('updateDisplayName renames the signed-in user', () async {
+      final auth = fake.MockFirebaseAuth(signedIn: true, mockUser: bob);
+      final dataSource = FirebaseAuthDataSource(auth, google);
+
+      final user = await dataSource.updateDisplayName('Robert');
+
+      expect(user.displayName, 'Robert');
+      expect(auth.currentUser?.displayName, 'Robert');
+    });
+
+    test('updateDisplayName without a user throws unknown', () {
+      final dataSource = FirebaseAuthDataSource(
+        fake.MockFirebaseAuth(),
+        google,
+      );
+
+      expect(
+        dataSource.updateDisplayName('Robert'),
+        throwsA(
+          isA<AuthException>().having(
+            (e) => e.error,
+            'error',
+            AuthError.unknown,
+          ),
+        ),
+      );
+    });
+
     test('deleteAccount without a user throws unknown', () {
       final dataSource = FirebaseAuthDataSource(
         fake.MockFirebaseAuth(),
@@ -244,4 +310,13 @@ void main() {
       verifyNever(() => google.signOut());
     });
   });
+}
+
+class _MockUserInfo extends Mock implements UserInfo {}
+
+/// One of a user's sign-in providers, e.g. `google.com` or `password`.
+UserInfo _userInfo({required String providerId}) {
+  final info = _MockUserInfo();
+  when(() => info.providerId).thenReturn(providerId);
+  return info;
 }

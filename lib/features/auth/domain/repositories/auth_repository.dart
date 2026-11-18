@@ -31,6 +31,9 @@ abstract interface class AuthRepository {
   /// Sends a "reset your password" link to [email].
   Future<Result<void>> sendPasswordResetEmail(String email);
 
+  /// Changes the signed-in user's display name. Returns the updated user.
+  Future<Result<AppUser>> updateDisplayName(String name);
+
   Future<Result<void>> signOut();
 
   /// Deletes the signed-in user's account (only the account: the cloud

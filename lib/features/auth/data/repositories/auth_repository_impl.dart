@@ -48,6 +48,10 @@ class AuthRepositoryImpl implements AuthRepository {
       _guard(() => _dataSource.sendPasswordResetEmail(email));
 
   @override
+  Future<Result<AppUser>> updateDisplayName(String name) =>
+      _guard(() => _dataSource.updateDisplayName(name));
+
+  @override
   Future<Result<void>> signOut() => _guard(_dataSource.signOut);
 
   @override
