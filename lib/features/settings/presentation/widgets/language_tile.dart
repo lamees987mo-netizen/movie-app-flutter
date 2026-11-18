@@ -38,6 +38,9 @@ Future<void> showLanguageSheet(BuildContext context) {
   final cubit = context.read<SettingsCubit>();
   return showModalBottomSheet<void>(
     context: context,
+    // Above the whole app, so the bottom navigation bar doesn't cover the
+    // last option (the Account tab has its own nested navigator).
+    useRootNavigator: true,
     showDragHandle: true,
     builder: (sheetContext) {
       final l10n = AppLocalizations.of(sheetContext);
