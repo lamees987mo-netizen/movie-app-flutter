@@ -154,16 +154,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get watchlistConfirm => 'Clear';
 
   @override
-  String get settingsTheme => 'Theme';
-
-  @override
   String get settingsThemeLight => 'Light';
 
   @override
   String get settingsThemeDark => 'Dark';
-
-  @override
-  String get settingsThemeSystem => 'System';
 
   @override
   String get settingsLanguage => 'Language';
@@ -175,32 +169,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsArabic => 'العربية';
 
   @override
-  String get accountSettings => 'Settings';
-
-  @override
-  String get accountGuestTitle => 'Sign in to sync your watchlist';
-
-  @override
-  String get accountGuestBody =>
-      'Save your watchlist to your account and see it on every device you sign in on. You can keep using the app without an account.';
-
-  @override
   String get accountSignIn => 'Sign in';
-
-  @override
-  String accountWatchlistCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count saved movies',
-      one: '1 saved movie',
-      zero: 'No saved movies',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get accountWatchlistSynced => 'Synced with your account';
 
   @override
   String get accountSignOut => 'Sign out';

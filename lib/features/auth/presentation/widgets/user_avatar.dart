@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/features/auth/domain/entities/app_user.dart';
 
 /// The user's photo (e.g. from Google), or their initials when there is
-/// none (email accounts).
+/// none (email accounts). A guest ([user] is `null`) gets a person icon.
 class UserAvatar extends StatelessWidget {
-  const UserAvatar({required this.user, this.radius = 32, super.key});
+  const UserAvatar({required this.user, this.radius = 44, super.key});
 
-  final AppUser user;
+  final AppUser? user;
   final double radius;
 
   /// Up to two letters: "Lamees Saad" -> "LS", "lamees@x.com" -> "L".
@@ -26,19 +26,26 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final photoUrl = user.photoUrl;
+    final user = this.user;
+    final photoUrl = user?.photoUrl;
     return CircleAvatar(
       radius: radius,
+      // A soft tint from the theme, so it fits light and dark mode.
       backgroundColor: colors.primaryContainer,
       foregroundColor: colors.onPrimaryContainer,
       // The initials stay underneath while the photo loads (or if it fails).
       foregroundImage: photoUrl == null
           ? null
           : CachedNetworkImageProvider(photoUrl),
-      child: Text(
-        initialsOf(user),
-        style: TextStyle(fontSize: radius * 0.7, fontWeight: FontWeight.w600),
-      ),
+      child: user == null
+          ? Icon(Icons.person_outline, size: radius)
+          : Text(
+              initialsOf(user),
+              style: TextStyle(
+                fontSize: radius * 0.7,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
     );
   }
 }

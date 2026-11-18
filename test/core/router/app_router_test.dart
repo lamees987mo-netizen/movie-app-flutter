@@ -14,8 +14,11 @@ import 'package:movie_app/core/router/routes.dart';
 import 'package:movie_app/features/auth/domain/entities/app_user.dart';
 import 'package:movie_app/features/auth/presentation/cubit/account_cubit.dart';
 import 'package:movie_app/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:movie_app/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:movie_app/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:movie_app/features/auth/presentation/pages/account_page.dart';
+import 'package:movie_app/features/auth/presentation/pages/manage_profile_page.dart';
+import 'package:movie_app/features/auth/presentation/pages/security_page.dart';
 import 'package:movie_app/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:movie_app/features/movies/domain/entities/movie_category.dart';
 import 'package:movie_app/features/movies/presentation/cubit/movie_details_cubit.dart';
@@ -29,9 +32,12 @@ import 'package:movie_app/features/search/presentation/bloc/search_bloc.dart';
 import 'package:movie_app/features/search/presentation/pages/search_page.dart';
 import 'package:movie_app/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:movie_app/features/settings/presentation/cubit/settings_state.dart';
+import 'package:movie_app/features/settings/presentation/pages/about_page.dart';
+import 'package:movie_app/features/settings/presentation/pages/terms_page.dart';
 import 'package:movie_app/features/watchlist/presentation/cubit/watchlist_cubit.dart';
 import 'package:movie_app/features/watchlist/presentation/pages/watchlist_page.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../features/movies/movies_test_helpers.dart';
 
@@ -58,6 +64,9 @@ class MockAccountCubit extends MockCubit<AccountState>
     implements AccountCubit {}
 
 class MockSignInCubit extends MockCubit<SignInState> implements SignInCubit {}
+
+class MockProfileCubit extends MockCubit<ProfileState>
+    implements ProfileCubit {}
 
 class MockConnectivity extends Mock implements Connectivity {}
 
@@ -130,6 +139,11 @@ void main() {
       ..registerFactory<SignInCubit>(() {
         final cubit = MockSignInCubit();
         when(() => cubit.state).thenReturn(const SignInIdle());
+        return cubit;
+      })
+      ..registerFactory<ProfileCubit>(() {
+        final cubit = MockProfileCubit();
+        when(() => cubit.state).thenReturn(const ProfileIdle());
         return cubit;
       });
 
@@ -273,5 +287,56 @@ void main() {
 
     expect(find.byType(SignInPage), findsNothing);
     expect(find.byType(AccountPage), findsOneWidget);
+  });
+
+  group('account sub-pages', () {
+    const user = AppUser(uid: 'u1', email: 'a@b.co');
+
+    for (final path in [Routes.accountProfile, Routes.accountSecurity]) {
+      testWidgets('$path sends a guest to sign-in', (tester) async {
+        final router = await pumpApp(tester);
+
+        router.go(path);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SignInPage), findsOneWidget);
+      });
+    }
+
+    final signedInPages = {
+      Routes.accountProfile: ManageProfilePage,
+      Routes.accountSecurity: SecurityPage,
+    };
+    for (final MapEntry(key: path, value: page) in signedInPages.entries) {
+      testWidgets('$path opens full screen when signed in', (tester) async {
+        when(() => auth.state).thenReturn(const AuthSignedIn(user));
+        final router = await pumpApp(tester);
+
+        unawaited(router.push(path));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(page), findsOneWidget);
+        expect(find.byType(NavigationBar), findsNothing);
+      });
+    }
+
+    testWidgets('terms and about open for everyone', (tester) async {
+      PackageInfo.setMockInitialValues(
+        appName: 'Movie App',
+        packageName: 'com.lamees.movie_app',
+        version: '1.0.0',
+        buildNumber: '1',
+        buildSignature: '',
+      );
+      final router = await pumpApp(tester);
+
+      unawaited(router.push(Routes.terms));
+      await tester.pumpAndSettle();
+      expect(find.byType(TermsPage), findsOneWidget);
+
+      router.go(Routes.about);
+      await tester.pumpAndSettle();
+      expect(find.byType(AboutPage), findsOneWidget);
+    });
   });
 }

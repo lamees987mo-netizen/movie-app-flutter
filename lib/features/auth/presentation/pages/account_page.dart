@@ -3,20 +3,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/core/di/injection.dart';
-import 'package:movie_app/core/error/failure_message.dart';
-import 'package:movie_app/core/error/failures.dart';
 import 'package:movie_app/core/theme/app_theme.dart';
 import 'package:movie_app/features/auth/presentation/cubit/account_cubit.dart';
 import 'package:movie_app/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:movie_app/features/auth/presentation/widgets/delete_account_dialog.dart';
-import 'package:movie_app/features/auth/presentation/widgets/guest_card.dart';
+import 'package:movie_app/features/auth/presentation/widgets/account_feedback.dart';
+import 'package:movie_app/features/auth/presentation/widgets/account_group.dart';
 import 'package:movie_app/features/auth/presentation/widgets/profile_header.dart';
-import 'package:movie_app/features/settings/presentation/widgets/settings_panel.dart';
+import 'package:movie_app/features/settings/presentation/widgets/preferences_group.dart';
+import 'package:movie_app/features/settings/presentation/widgets/settings_group.dart';
+import 'package:movie_app/features/settings/presentation/widgets/settings_tile.dart';
+import 'package:movie_app/features/settings/presentation/widgets/support_group.dart';
 import 'package:movie_app/features/watchlist/presentation/cubit/watchlist_cubit.dart';
 import 'package:movie_app/l10n/generated/app_localizations.dart';
 
-/// The Account tab: the profile (or "Sign in" for guests), the settings,
-/// and "Sign out" / "Delete account".
+/// The Account tab, laid out like a phone's Settings app: the profile at
+/// the top, then groups of rows (Account, Preferences, Support), and
+/// "Sign out" at the bottom for signed-in users.
 ///
 /// This widget only creates the screen's cubits; [AccountView] draws it,
 /// so widget tests can give the view mock cubits. The user comes from the
@@ -29,7 +31,7 @@ class AccountPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<AccountCubit>()),
-        // Reused from the watchlist feature, for the "N saved movies" line.
+        // Reused from the watchlist feature, for the "My watchlist" count.
         BlocProvider(
           create: (_) {
             final cubit = sl<WatchlistCubit>();
@@ -49,104 +51,70 @@ class AccountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.navAccount)),
+      // A tab: no back button.
+      appBar: AppBar(title: Text(l10n.accountPageTitle)),
       body: BlocListener<AccountCubit, AccountState>(
-        listener: _showResult,
+        listener: showAccountFeedback,
         child: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, auth) => ListView(
-            padding: const EdgeInsetsDirectional.all(AppSpacing.md),
-            children: [
-              switch (auth) {
-                AuthSignedOut() => const GuestCard(),
-                AuthSignedIn(:final user) => ProfileHeader(user: user),
-              },
-              const SizedBox(height: AppSpacing.lg),
-              Text(l10n.accountSettings, style: theme.textTheme.titleLarge),
-              const SizedBox(height: AppSpacing.md),
-              const SettingsPanel(),
-              if (auth is AuthSignedIn) ...[
-                const SizedBox(height: AppSpacing.xl),
-                const _AccountActions(),
+          builder: (context, auth) {
+            final user = switch (auth) {
+              AuthSignedIn(:final user) => user,
+              AuthSignedOut() => null,
+            };
+            return ListView(
+              padding: const EdgeInsetsDirectional.all(AppSpacing.md),
+              children: [
+                const SizedBox(height: AppSpacing.sm),
+                ProfileHeader(user: user),
+                const SizedBox(height: AppSpacing.lg),
+                const AccountGroup(),
+                const SizedBox(height: AppSpacing.lg),
+                const PreferencesGroup(),
+                const SizedBox(height: AppSpacing.lg),
+                const SupportGroup(),
+                if (user != null) ...[
+                  const SizedBox(height: AppSpacing.lg),
+                  const _SignOutGroup(),
+                ],
+                const SizedBox(height: AppSpacing.md),
               ],
-              const SizedBox(height: AppSpacing.xl),
-              // Required by TMDB's terms of use.
-              Text(
-                l10n.tmdbAttribution,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
   }
-
-  static void _showResult(BuildContext context, AccountState state) {
-    final l10n = AppLocalizations.of(context);
-    final messenger = ScaffoldMessenger.of(context);
-    switch (state) {
-      case AccountDeleted():
-        messenger.showSnackBar(SnackBar(content: Text(l10n.accountDeleted)));
-      case AccountError(:final failure):
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(failure.message(l10n)),
-            // The message says "sign out and sign in again": one tap.
-            action: failure == const AuthFailure(AuthError.requiresRecentLogin)
-                ? SnackBarAction(
-                    label: l10n.accountSignOut,
-                    onPressed: () => context.read<AccountCubit>().signOut(),
-                  )
-                : null,
-          ),
-        );
-      case AccountIdle() || AccountBusy():
-        break;
-    }
-  }
 }
 
-class _AccountActions extends StatelessWidget {
-  const _AccountActions();
+/// "Sign out", in red, on its own at the bottom.
+///
+/// No "Are you sure?" dialog: signing out loses nothing (the watchlist is
+/// saved in the account and comes back on the next sign-in), and it is
+/// easy to sign in again.
+class _SignOutGroup extends StatelessWidget {
+  const _SignOutGroup();
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final colors = Theme.of(context).colorScheme;
     return BlocBuilder<AccountCubit, AccountState>(
       builder: (context, state) {
         final busy = state is AccountBusy;
-        final cubit = context.read<AccountCubit>();
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        return SettingsGroup(
           children: [
-            OutlinedButton.icon(
-              onPressed: busy ? null : cubit.signOut,
-              icon: busy
+            SettingsTile(
+              icon: Icons.logout,
+              title: l10n.accountSignOut,
+              destructive: true,
+              trailing: busy
                   ? const SizedBox.square(
                       dimension: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.logout),
-              label: Text(l10n.accountSignOut),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            TextButton.icon(
-              style: TextButton.styleFrom(foregroundColor: colors.error),
-              onPressed: busy
-                  ? null
-                  : () async {
-                      if (await confirmDeleteAccount(context)) {
-                        await cubit.deleteAccount();
-                      }
-                    },
-              icon: const Icon(Icons.delete_forever_outlined),
-              label: Text(l10n.accountDelete),
+                  : null,
+              // Taps while signing out are ignored.
+              onTap: busy ? null : context.read<AccountCubit>().signOut,
             ),
           ],
         );

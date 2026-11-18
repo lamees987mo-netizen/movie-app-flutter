@@ -368,12 +368,6 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get watchlistConfirm;
 
-  /// No description provided for @settingsTheme.
-  ///
-  /// In en, this message translates to:
-  /// **'Theme'**
-  String get settingsTheme;
-
   /// No description provided for @settingsThemeLight.
   ///
   /// In en, this message translates to:
@@ -385,12 +379,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dark'**
   String get settingsThemeDark;
-
-  /// No description provided for @settingsThemeSystem.
-  ///
-  /// In en, this message translates to:
-  /// **'System'**
-  String get settingsThemeSystem;
 
   /// No description provided for @settingsLanguage.
   ///
@@ -410,41 +398,11 @@ abstract class AppLocalizations {
   /// **'العربية'**
   String get settingsArabic;
 
-  /// Title of the theme and language section on the account page.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get accountSettings;
-
-  /// No description provided for @accountGuestTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Sign in to sync your watchlist'**
-  String get accountGuestTitle;
-
-  /// Shown to guests on the account page, explaining why to sign in.
-  ///
-  /// In en, this message translates to:
-  /// **'Save your watchlist to your account and see it on every device you sign in on. You can keep using the app without an account.'**
-  String get accountGuestBody;
-
   /// No description provided for @accountSignIn.
   ///
   /// In en, this message translates to:
   /// **'Sign in'**
   String get accountSignIn;
-
-  /// Number of movies in the signed-in user's watchlist.
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =0{No saved movies} =1{1 saved movie} other{{count} saved movies}}'**
-  String accountWatchlistCount(int count);
-
-  /// No description provided for @accountWatchlistSynced.
-  ///
-  /// In en, this message translates to:
-  /// **'Synced with your account'**
-  String get accountWatchlistSynced;
 
   /// No description provided for @accountSignOut.
   ///

@@ -161,16 +161,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get watchlistConfirm => 'مسح';
 
   @override
-  String get settingsTheme => 'المظهر';
-
-  @override
   String get settingsThemeLight => 'فاتح';
 
   @override
   String get settingsThemeDark => 'داكن';
-
-  @override
-  String get settingsThemeSystem => 'حسب النظام';
 
   @override
   String get settingsLanguage => 'اللغة';
@@ -182,35 +176,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsArabic => 'العربية';
 
   @override
-  String get accountSettings => 'الإعدادات';
-
-  @override
-  String get accountGuestTitle => 'سجّل الدخول لمزامنة قائمة المشاهدة';
-
-  @override
-  String get accountGuestBody =>
-      'احفظ قائمة المشاهدة في حسابك وشاهدها على أي جهاز تسجّل الدخول منه. ويمكنك متابعة استخدام التطبيق بدون حساب.';
-
-  @override
   String get accountSignIn => 'تسجيل الدخول';
-
-  @override
-  String accountWatchlistCount(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count فيلم محفوظ',
-      many: '$count فيلمًا محفوظًا',
-      few: '$count أفلام محفوظة',
-      two: 'فيلمان محفوظان',
-      one: 'فيلم محفوظ واحد',
-      zero: 'لا توجد أفلام محفوظة',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get accountWatchlistSynced => 'متزامنة مع حسابك';
 
   @override
   String get accountSignOut => 'تسجيل الخروج';

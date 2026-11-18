@@ -36,4 +36,10 @@ void main() {
     final avatar = tester.widget<CircleAvatar>(find.byType(CircleAvatar));
     expect(avatar.foregroundImage, isNull);
   });
+
+  testWidgets('a guest gets a person icon', (tester) async {
+    await tester.pumpWidget(wrapWithApp(const UserAvatar(user: null)));
+
+    expect(find.byIcon(Icons.person_outline), findsOneWidget);
+  });
 }

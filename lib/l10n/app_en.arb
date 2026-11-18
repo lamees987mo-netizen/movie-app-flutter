@@ -93,33 +93,12 @@
   "watchlistClearConfirmBody": "This removes every movie from your watchlist.",
   "watchlistCancel": "Cancel",
   "watchlistConfirm": "Clear",
-  "settingsTheme": "Theme",
   "settingsThemeLight": "Light",
   "settingsThemeDark": "Dark",
-  "settingsThemeSystem": "System",
   "settingsLanguage": "Language",
   "settingsEnglish": "English",
   "settingsArabic": "العربية",
-  "accountSettings": "Settings",
-  "@accountSettings": {
-    "description": "Title of the theme and language section on the account page."
-  },
-  "accountGuestTitle": "Sign in to sync your watchlist",
-  "accountGuestBody": "Save your watchlist to your account and see it on every device you sign in on. You can keep using the app without an account.",
-  "@accountGuestBody": {
-    "description": "Shown to guests on the account page, explaining why to sign in."
-  },
   "accountSignIn": "Sign in",
-  "accountWatchlistCount": "{count, plural, =0{No saved movies} =1{1 saved movie} other{{count} saved movies}}",
-  "@accountWatchlistCount": {
-    "description": "Number of movies in the signed-in user's watchlist.",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "accountWatchlistSynced": "Synced with your account",
   "accountSignOut": "Sign out",
   "accountDelete": "Delete account",
   "accountDeleteConfirmTitle": "Delete your account?",
