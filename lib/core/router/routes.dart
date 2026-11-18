@@ -10,6 +10,12 @@ abstract final class Routes {
   static const String signIn = '/sign-in';
   static const String person = '/person/:id';
 
+  // Pages opened from the Account tab, full screen above the tab bar.
+  static const String accountProfile = '/account/profile';
+  static const String accountSecurity = '/account/security';
+  static const String terms = '/account/terms';
+  static const String about = '/account/about';
+
   /// Old path of the Settings tab; redirects to [account].
   static const String settings = '/settings';
 
@@ -31,6 +37,10 @@ abstract final class RouteNames {
   static const String account = 'account';
   static const String signIn = 'signIn';
   static const String person = 'person';
+  static const String accountProfile = 'accountProfile';
+  static const String accountSecurity = 'accountSecurity';
+  static const String terms = 'terms';
+  static const String about = 'about';
 }
 
 /// The in-app trailer player: `/trailer/<youtube video id>`.
