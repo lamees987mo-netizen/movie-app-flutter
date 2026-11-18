@@ -129,6 +129,83 @@
     "description": "Confirm button of the delete-account dialog."
   },
   "accountDeleted": "Your account was deleted.",
+  "accountPageTitle": "Profile",
+  "@accountPageTitle": {
+    "description": "App bar title of the Account tab."
+  },
+  "accountGuestName": "Guest",
+  "@accountGuestName": {
+    "description": "Shown instead of a name at the top of the Account tab when nobody is signed in."
+  },
+  "accountSectionAccount": "Account",
+  "@accountSectionAccount": {
+    "description": "Title of the group with Manage profile, Security and My watchlist."
+  },
+  "accountManageProfile": "Manage profile",
+  "accountSecurity": "Security & privacy",
+  "accountMyWatchlist": "My watchlist",
+  "@accountMyWatchlist": {
+    "description": "Row on the Account tab that opens the Watchlist tab; its trailing value is the number of saved movies."
+  },
+  "accountProfileName": "Name",
+  "accountProfileNameRequired": "Enter your name",
+  "accountProfileSave": "Save",
+  "accountProfileSaved": "Your name was saved.",
+  "accountSignInMethod": "Sign-in method",
+  "accountSignInMethodGoogle": "Google",
+  "accountSignInMethodEmail": "Email and password",
+  "accountSectionSignIn": "Sign-in",
+  "@accountSectionSignIn": {
+    "description": "Title of the password group on the Security & privacy page."
+  },
+  "accountChangePassword": "Change password",
+  "accountChangePasswordHint": "We'll email you a link to choose a new password.",
+  "accountPasswordResetSent": "We sent a link to {email} to change your password.",
+  "@accountPasswordResetSent": {
+    "description": "Shown after a signed-in user asks to change their password.",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountGooglePasswordNote": "You sign in with Google, so your password is managed in your Google account.",
+  "accountSectionDanger": "Danger zone",
+  "@accountSectionDanger": {
+    "description": "Title of the group with the Delete account row on the Security & privacy page."
+  },
+  "accountDeleteHint": "Permanently delete your account and its synced watchlist.",
+  "settingsSectionPreferences": "Preferences",
+  "settingsDarkMode": "Dark mode",
+  "settingsSectionSupport": "Support",
+  "settingsHelpCenter": "Help center",
+  "@settingsHelpCenter": {
+    "description": "Opens the app's GitHub issues page in the browser."
+  },
+  "settingsTerms": "Terms & policies",
+  "settingsAbout": "About us",
+  "settingsLinkError": "Couldn't open the link.",
+  "settingsTermsIntro": "Movie App is a free portfolio project. This page explains what it stores and where.",
+  "settingsTermsDeviceTitle": "On your device",
+  "settingsTermsDeviceBody": "Your watchlist, theme and language are saved on this phone, so they work offline.",
+  "settingsTermsAccountTitle": "If you sign in",
+  "settingsTermsAccountBody": "Your email, name and watchlist are stored in Firebase (by Google), so your watchlist follows you to other devices. Deleting your account deletes them.",
+  "settingsTermsAnalyticsTitle": "Analytics and crash reports",
+  "settingsTermsAnalyticsBody": "The app sends anonymous usage events and crash reports to Firebase to help fix bugs. They don't include your email or name.",
+  "settingsTermsTmdbTitle": "Movie data",
+  "settingsTermsTmdbBody": "Movies, posters and trailers come from The Movie Database (TMDB) and YouTube. The app doesn't host or stream full movies.",
+  "settingsAboutVersion": "Version {version}",
+  "@settingsAboutVersion": {
+    "description": "The app's version on the About page, e.g. 'Version 1.0.0 (1)'.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAboutDescription": "Browse trending movies, search, watch trailers and keep a watchlist, in English and Arabic.",
+  "settingsAboutSourceCode": "Source code on GitHub",
+  "settingsAboutLicenses": "Open-source licenses",
   "authSignIn": "Sign in",
   "authSignUp": "Create account",
   "authName": "Name (optional)",

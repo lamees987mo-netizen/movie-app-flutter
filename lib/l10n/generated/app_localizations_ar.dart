@@ -232,6 +232,139 @@ class AppLocalizationsAr extends AppLocalizations {
   String get accountDeleted => 'تم حذف حسابك.';
 
   @override
+  String get accountPageTitle => 'الملف الشخصي';
+
+  @override
+  String get accountGuestName => 'زائر';
+
+  @override
+  String get accountSectionAccount => 'الحساب';
+
+  @override
+  String get accountManageProfile => 'إدارة الملف الشخصي';
+
+  @override
+  String get accountSecurity => 'الأمان والخصوصية';
+
+  @override
+  String get accountMyWatchlist => 'قائمة المشاهدة';
+
+  @override
+  String get accountProfileName => 'الاسم';
+
+  @override
+  String get accountProfileNameRequired => 'اكتب اسمك';
+
+  @override
+  String get accountProfileSave => 'حفظ';
+
+  @override
+  String get accountProfileSaved => 'تم حفظ اسمك.';
+
+  @override
+  String get accountSignInMethod => 'طريقة تسجيل الدخول';
+
+  @override
+  String get accountSignInMethodGoogle => 'Google';
+
+  @override
+  String get accountSignInMethodEmail => 'البريد الإلكتروني وكلمة المرور';
+
+  @override
+  String get accountSectionSignIn => 'تسجيل الدخول';
+
+  @override
+  String get accountChangePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get accountChangePasswordHint =>
+      'سنرسل لك رابطًا بالبريد الإلكتروني لاختيار كلمة مرور جديدة.';
+
+  @override
+  String accountPasswordResetSent(String email) {
+    return 'أرسلنا رابطًا إلى $email لتغيير كلمة المرور.';
+  }
+
+  @override
+  String get accountGooglePasswordNote =>
+      'أنت تسجّل الدخول بحساب Google، لذلك تُدار كلمة المرور من حسابك على Google.';
+
+  @override
+  String get accountSectionDanger => 'منطقة الخطر';
+
+  @override
+  String get accountDeleteHint =>
+      'احذف حسابك وقائمة المشاهدة المتزامنة معه نهائيًا.';
+
+  @override
+  String get settingsSectionPreferences => 'التفضيلات';
+
+  @override
+  String get settingsDarkMode => 'الوضع الداكن';
+
+  @override
+  String get settingsSectionSupport => 'الدعم';
+
+  @override
+  String get settingsHelpCenter => 'مركز المساعدة';
+
+  @override
+  String get settingsTerms => 'الشروط والسياسات';
+
+  @override
+  String get settingsAbout => 'من نحن';
+
+  @override
+  String get settingsLinkError => 'تعذّر فتح الرابط.';
+
+  @override
+  String get settingsTermsIntro =>
+      'تطبيق الأفلام مشروع مجاني ضمن معرض أعمال. توضح هذه الصفحة ما يحفظه التطبيق وأين.';
+
+  @override
+  String get settingsTermsDeviceTitle => 'على جهازك';
+
+  @override
+  String get settingsTermsDeviceBody =>
+      'تُحفظ قائمة المشاهدة والمظهر واللغة على هذا الهاتف، لذلك تعمل بدون إنترنت.';
+
+  @override
+  String get settingsTermsAccountTitle => 'إذا سجّلت الدخول';
+
+  @override
+  String get settingsTermsAccountBody =>
+      'يُحفظ بريدك الإلكتروني واسمك وقائمة المشاهدة في Firebase (من Google)، لتظهر قائمتك على أجهزتك الأخرى. وعند حذف حسابك تُحذف كلها.';
+
+  @override
+  String get settingsTermsAnalyticsTitle => 'الإحصاءات وتقارير الأعطال';
+
+  @override
+  String get settingsTermsAnalyticsBody =>
+      'يرسل التطبيق أحداث استخدام مجهولة الهوية وتقارير الأعطال إلى Firebase للمساعدة في إصلاح المشكلات، ولا تتضمن بريدك أو اسمك.';
+
+  @override
+  String get settingsTermsTmdbTitle => 'بيانات الأفلام';
+
+  @override
+  String get settingsTermsTmdbBody =>
+      'الأفلام والملصقات والإعلانات مصدرها قاعدة بيانات الأفلام TMDB ويوتيوب. التطبيق لا يستضيف الأفلام الكاملة ولا يعرضها.';
+
+  @override
+  String settingsAboutVersion(String version) {
+    return 'الإصدار $version';
+  }
+
+  @override
+  String get settingsAboutDescription =>
+      'تصفّح الأفلام الرائجة، وابحث، وشاهد الإعلانات، واحتفظ بقائمة مشاهدة، بالعربية والإنجليزية.';
+
+  @override
+  String get settingsAboutSourceCode => 'الكود المصدري على GitHub';
+
+  @override
+  String get settingsAboutLicenses => 'تراخيص المصادر المفتوحة';
+
+  @override
   String get authSignIn => 'تسجيل الدخول';
 
   @override

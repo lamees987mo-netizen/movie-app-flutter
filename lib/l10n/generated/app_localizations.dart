@@ -482,6 +482,246 @@ abstract class AppLocalizations {
   /// **'Your account was deleted.'**
   String get accountDeleted;
 
+  /// App bar title of the Account tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get accountPageTitle;
+
+  /// Shown instead of a name at the top of the Account tab when nobody is signed in.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get accountGuestName;
+
+  /// Title of the group with Manage profile, Security and My watchlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountSectionAccount;
+
+  /// No description provided for @accountManageProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage profile'**
+  String get accountManageProfile;
+
+  /// No description provided for @accountSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Security & privacy'**
+  String get accountSecurity;
+
+  /// Row on the Account tab that opens the Watchlist tab; its trailing value is the number of saved movies.
+  ///
+  /// In en, this message translates to:
+  /// **'My watchlist'**
+  String get accountMyWatchlist;
+
+  /// No description provided for @accountProfileName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get accountProfileName;
+
+  /// No description provided for @accountProfileNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get accountProfileNameRequired;
+
+  /// No description provided for @accountProfileSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get accountProfileSave;
+
+  /// No description provided for @accountProfileSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name was saved.'**
+  String get accountProfileSaved;
+
+  /// No description provided for @accountSignInMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in method'**
+  String get accountSignInMethod;
+
+  /// No description provided for @accountSignInMethodGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Google'**
+  String get accountSignInMethodGoogle;
+
+  /// No description provided for @accountSignInMethodEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email and password'**
+  String get accountSignInMethodEmail;
+
+  /// Title of the password group on the Security & privacy page.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in'**
+  String get accountSectionSignIn;
+
+  /// No description provided for @accountChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get accountChangePassword;
+
+  /// No description provided for @accountChangePasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll email you a link to choose a new password.'**
+  String get accountChangePasswordHint;
+
+  /// Shown after a signed-in user asks to change their password.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a link to {email} to change your password.'**
+  String accountPasswordResetSent(String email);
+
+  /// No description provided for @accountGooglePasswordNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You sign in with Google, so your password is managed in your Google account.'**
+  String get accountGooglePasswordNote;
+
+  /// Title of the group with the Delete account row on the Security & privacy page.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger zone'**
+  String get accountSectionDanger;
+
+  /// No description provided for @accountDeleteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete your account and its synced watchlist.'**
+  String get accountDeleteHint;
+
+  /// No description provided for @settingsSectionPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get settingsSectionPreferences;
+
+  /// No description provided for @settingsDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark mode'**
+  String get settingsDarkMode;
+
+  /// No description provided for @settingsSectionSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get settingsSectionSupport;
+
+  /// Opens the app's GitHub issues page in the browser.
+  ///
+  /// In en, this message translates to:
+  /// **'Help center'**
+  String get settingsHelpCenter;
+
+  /// No description provided for @settingsTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & policies'**
+  String get settingsTerms;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About us'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsLinkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link.'**
+  String get settingsLinkError;
+
+  /// No description provided for @settingsTermsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Movie App is a free portfolio project. This page explains what it stores and where.'**
+  String get settingsTermsIntro;
+
+  /// No description provided for @settingsTermsDeviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'On your device'**
+  String get settingsTermsDeviceTitle;
+
+  /// No description provided for @settingsTermsDeviceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your watchlist, theme and language are saved on this phone, so they work offline.'**
+  String get settingsTermsDeviceBody;
+
+  /// No description provided for @settingsTermsAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'If you sign in'**
+  String get settingsTermsAccountTitle;
+
+  /// No description provided for @settingsTermsAccountBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email, name and watchlist are stored in Firebase (by Google), so your watchlist follows you to other devices. Deleting your account deletes them.'**
+  String get settingsTermsAccountBody;
+
+  /// No description provided for @settingsTermsAnalyticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics and crash reports'**
+  String get settingsTermsAnalyticsTitle;
+
+  /// No description provided for @settingsTermsAnalyticsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The app sends anonymous usage events and crash reports to Firebase to help fix bugs. They don\'t include your email or name.'**
+  String get settingsTermsAnalyticsBody;
+
+  /// No description provided for @settingsTermsTmdbTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Movie data'**
+  String get settingsTermsTmdbTitle;
+
+  /// No description provided for @settingsTermsTmdbBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Movies, posters and trailers come from The Movie Database (TMDB) and YouTube. The app doesn\'t host or stream full movies.'**
+  String get settingsTermsTmdbBody;
+
+  /// The app's version on the About page, e.g. 'Version 1.0.0 (1)'.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String settingsAboutVersion(String version);
+
+  /// No description provided for @settingsAboutDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse trending movies, search, watch trailers and keep a watchlist, in English and Arabic.'**
+  String get settingsAboutDescription;
+
+  /// No description provided for @settingsAboutSourceCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Source code on GitHub'**
+  String get settingsAboutSourceCode;
+
+  /// No description provided for @settingsAboutLicenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licenses'**
+  String get settingsAboutLicenses;
+
   /// No description provided for @authSignIn.
   ///
   /// In en, this message translates to:

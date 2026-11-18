@@ -222,6 +222,139 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountDeleted => 'Your account was deleted.';
 
   @override
+  String get accountPageTitle => 'Profile';
+
+  @override
+  String get accountGuestName => 'Guest';
+
+  @override
+  String get accountSectionAccount => 'Account';
+
+  @override
+  String get accountManageProfile => 'Manage profile';
+
+  @override
+  String get accountSecurity => 'Security & privacy';
+
+  @override
+  String get accountMyWatchlist => 'My watchlist';
+
+  @override
+  String get accountProfileName => 'Name';
+
+  @override
+  String get accountProfileNameRequired => 'Enter your name';
+
+  @override
+  String get accountProfileSave => 'Save';
+
+  @override
+  String get accountProfileSaved => 'Your name was saved.';
+
+  @override
+  String get accountSignInMethod => 'Sign-in method';
+
+  @override
+  String get accountSignInMethodGoogle => 'Google';
+
+  @override
+  String get accountSignInMethodEmail => 'Email and password';
+
+  @override
+  String get accountSectionSignIn => 'Sign-in';
+
+  @override
+  String get accountChangePassword => 'Change password';
+
+  @override
+  String get accountChangePasswordHint =>
+      'We\'ll email you a link to choose a new password.';
+
+  @override
+  String accountPasswordResetSent(String email) {
+    return 'We sent a link to $email to change your password.';
+  }
+
+  @override
+  String get accountGooglePasswordNote =>
+      'You sign in with Google, so your password is managed in your Google account.';
+
+  @override
+  String get accountSectionDanger => 'Danger zone';
+
+  @override
+  String get accountDeleteHint =>
+      'Permanently delete your account and its synced watchlist.';
+
+  @override
+  String get settingsSectionPreferences => 'Preferences';
+
+  @override
+  String get settingsDarkMode => 'Dark mode';
+
+  @override
+  String get settingsSectionSupport => 'Support';
+
+  @override
+  String get settingsHelpCenter => 'Help center';
+
+  @override
+  String get settingsTerms => 'Terms & policies';
+
+  @override
+  String get settingsAbout => 'About us';
+
+  @override
+  String get settingsLinkError => 'Couldn\'t open the link.';
+
+  @override
+  String get settingsTermsIntro =>
+      'Movie App is a free portfolio project. This page explains what it stores and where.';
+
+  @override
+  String get settingsTermsDeviceTitle => 'On your device';
+
+  @override
+  String get settingsTermsDeviceBody =>
+      'Your watchlist, theme and language are saved on this phone, so they work offline.';
+
+  @override
+  String get settingsTermsAccountTitle => 'If you sign in';
+
+  @override
+  String get settingsTermsAccountBody =>
+      'Your email, name and watchlist are stored in Firebase (by Google), so your watchlist follows you to other devices. Deleting your account deletes them.';
+
+  @override
+  String get settingsTermsAnalyticsTitle => 'Analytics and crash reports';
+
+  @override
+  String get settingsTermsAnalyticsBody =>
+      'The app sends anonymous usage events and crash reports to Firebase to help fix bugs. They don\'t include your email or name.';
+
+  @override
+  String get settingsTermsTmdbTitle => 'Movie data';
+
+  @override
+  String get settingsTermsTmdbBody =>
+      'Movies, posters and trailers come from The Movie Database (TMDB) and YouTube. The app doesn\'t host or stream full movies.';
+
+  @override
+  String settingsAboutVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get settingsAboutDescription =>
+      'Browse trending movies, search, watch trailers and keep a watchlist, in English and Arabic.';
+
+  @override
+  String get settingsAboutSourceCode => 'Source code on GitHub';
+
+  @override
+  String get settingsAboutLicenses => 'Open-source licenses';
+
+  @override
   String get authSignIn => 'Sign in';
 
   @override
