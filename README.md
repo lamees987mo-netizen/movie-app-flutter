@@ -2,11 +2,12 @@
 
 [![CI](https://github.com/lamees987mo-netizen/movie-app-flutter/actions/workflows/ci.yml/badge.svg)](https://github.com/lamees987mo-netizen/movie-app-flutter/actions/workflows/ci.yml)
 ![Flutter](https://img.shields.io/badge/Flutter-3.44-02569B?logo=flutter)
-![Coverage](https://img.shields.io/badge/coverage-91%25-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen)
 
 A movie browser built on the [TMDB](https://www.themoviedb.org/) API.
 Clean Architecture, Bloc/Cubit, an offline cache, Firebase Crashlytics and
-Analytics, and full Arabic (RTL) and English support, with 319 tests.
+Analytics, sign-in with Google or email, and full Arabic (RTL) and English
+support, with 555 tests.
 
 <p align="center"><img src="docs/demo.gif" alt="App demo: home, movie details and search" width="300"></p>
 
@@ -14,9 +15,9 @@ Analytics, and full Arabic (RTL) and English support, with 319 tests.
 |---|---|---|
 | ![Home](docs/screenshots/home-light-en.jpg) | ![Details](docs/screenshots/details-light-en.jpg) | ![Search](docs/screenshots/search-light-en.jpg) |
 
-| Home (Arabic, dark) | Details (Arabic, dark) | Settings |
+| Home (Arabic, dark) | Details (Arabic, dark) | Profile (Arabic, dark) |
 |---|---|---|
-| ![Home in Arabic](docs/screenshots/home-dark-ar.jpg) | ![Details in Arabic](docs/screenshots/details-dark-ar.jpg) | ![Settings](docs/screenshots/settings-dark-ar.jpg) |
+| ![Home in Arabic](docs/screenshots/home-dark-ar.jpg) | ![Details in Arabic](docs/screenshots/details-dark-ar.jpg) | ![Profile in Arabic](docs/screenshots/profile-dark-ar.jpg) |
 
 ## Features
 
@@ -25,8 +26,8 @@ Analytics, and full Arabic (RTL) and English support, with 319 tests.
 - **See all**: an endless grid per section that loads the next page as you
   scroll.
 - **Movie details**: Hero animation for the poster, rating, runtime, genres,
-  cast, similar movies and a "Play trailer" button that opens YouTube. All
-  loaded in one request. On tablets the layout uses two columns.
+  cast, similar movies and a trailer that plays inside the app (with an
+  "Open in YouTube" fallback). All loaded in one request. On tablets the layout uses two columns.
 - **Actor pages**: tap a cast member to see their photo, biography and
   best-known movies.
 - **Search**: results as you type with a 400 ms debounce, and more results
@@ -36,12 +37,14 @@ Analytics, and full Arabic (RTL) and English support, with 319 tests.
   follows you to other devices.
 - **Account (optional)**: sign in with Google or with email + password
   (including "Forgot password"), or keep using the app as a guest. The
-  Account tab shows your profile and watchlist count, the settings,
-  "Sign out" and "Delete account" (which also deletes your synced data).
+  Profile tab is grouped like a settings app: Manage profile (edit your
+  name), Security & privacy (change password, delete account, which also
+  deletes your synced data), My watchlist, preferences, Help center, Terms
+  & policies and About (with the app version), plus Sign out.
 - **Offline mode**: Home sections and every movie you opened are cached per
   language. Without internet you still see them, with a "You're offline" bar;
   everything refreshes by itself when the connection is back.
-- **Settings** (in the Account tab): light, dark or system theme, and Arabic or English (starts in
+- **Settings** (in the Account tab): a dark-mode switch, and Arabic or English (starts in
   the phone's language). Movie titles, overviews and posters also switch
   language.
 - **Crash reports and analytics** with Firebase (screens, watchlist changes,
@@ -149,7 +152,7 @@ lib/
 
 ## Testing
 
-- **319 unit and widget tests**, with **91% line coverage**. Every file in
+- **555 unit and widget tests**, with **93% line coverage**. Every file in
   `lib/` is counted, even ones with no tests; only generated files and
   `main.dart` are excluded.
 - Cubits and the Bloc are tested with `bloc_test`, including race conditions
