@@ -66,6 +66,29 @@ void main() {
   );
 
   blocTest<AccountCubit, AccountState>(
+    'change password: busy, then "email sent" with the address',
+    setUp: () => when(
+      () => repository.sendPasswordResetEmail('a@b.co'),
+    ).thenAnswer((_) async => const Success(null)),
+    build: build,
+    act: (cubit) => cubit.sendPasswordReset('a@b.co'),
+    expect: () => const [
+      AccountBusy(),
+      AccountPasswordResetSent('a@b.co'),
+    ],
+  );
+
+  blocTest<AccountCubit, AccountState>(
+    'change password failing: the error',
+    setUp: () => when(
+      () => repository.sendPasswordResetEmail(any()),
+    ).thenAnswer((_) async => const Err(NetworkFailure())),
+    build: build,
+    act: (cubit) => cubit.sendPasswordReset('a@b.co'),
+    expect: () => const [AccountBusy(), AccountError(NetworkFailure())],
+  );
+
+  blocTest<AccountCubit, AccountState>(
     'a second tap while busy is ignored',
     build: build,
     act: (cubit) async {
