@@ -12,6 +12,7 @@ import 'package:movie_app/features/auth/domain/repositories/auth_repository.dart
 import 'package:movie_app/features/auth/domain/usecases/delete_account.dart';
 import 'package:movie_app/features/auth/presentation/cubit/account_cubit.dart';
 import 'package:movie_app/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:movie_app/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:movie_app/features/auth/presentation/cubit/sign_in_cubit.dart';
 
 /// [firebaseReady] is `false` in tests and on desktop: the app then uses
@@ -68,5 +69,8 @@ void registerAuthDependencies(GetIt sl, {required bool firebaseReady}) {
         repository: sl<AuthRepository>(),
         deleteAccount: sl<DeleteAccount>(),
       ),
+    )
+    ..registerFactory<ProfileCubit>(
+      () => ProfileCubit(repository: sl<AuthRepository>()),
     );
 }

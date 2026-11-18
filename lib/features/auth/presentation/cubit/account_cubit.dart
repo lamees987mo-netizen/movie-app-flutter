@@ -6,7 +6,8 @@ import 'package:movie_app/features/auth/presentation/cubit/account_state.dart';
 
 export 'account_state.dart';
 
-/// "Sign out" and "Delete account" on the account screen.
+/// "Sign out", "Delete account" and "Change password" on the account
+/// screens.
 ///
 /// After either one, `AuthCubit` sees the user disappear and the screen
 /// switches to the guest view by itself.
@@ -22,6 +23,13 @@ class AccountCubit extends Cubit<AccountState> {
 
   Future<void> deleteAccount() =>
       _run(_deleteAccount.call, onSuccess: const AccountDeleted());
+
+  /// "Change password": Firebase emails [email] a link to set a new one,
+  /// so the app never handles the new password itself.
+  Future<void> sendPasswordReset(String email) => _run(
+    () => _repository.sendPasswordResetEmail(email),
+    onSuccess: AccountPasswordResetSent(email),
+  );
 
   /// Taps while an action is running are ignored.
   Future<void> _run(

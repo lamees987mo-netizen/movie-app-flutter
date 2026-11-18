@@ -7,6 +7,7 @@ import 'package:movie_app/features/auth/data/repositories/unavailable_auth_repos
 import 'package:movie_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movie_app/features/auth/presentation/cubit/account_cubit.dart';
 import 'package:movie_app/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:movie_app/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:movie_app/features/auth/presentation/cubit/sign_in_cubit.dart';
 import 'package:movie_app/features/watchlist/watchlist_injection.dart';
 
@@ -40,10 +41,12 @@ void main() {
     final first = sl<SignInCubit>();
     final second = sl<SignInCubit>();
     final account = sl<AccountCubit>();
+    final profile = sl<ProfileCubit>();
 
     expect(identical(first, second), isFalse);
     await first.close();
     await second.close();
     await account.close();
+    await profile.close();
   });
 }

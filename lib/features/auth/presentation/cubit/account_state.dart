@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:movie_app/core/error/failures.dart';
 
-/// The state of the account screen's "Sign out" and "Delete account".
+/// The state of the account screens' "Sign out", "Delete account" and
+/// "Change password".
 sealed class AccountState extends Equatable {
   const AccountState();
 
@@ -20,6 +21,16 @@ final class AccountBusy extends AccountState {
 
 final class AccountDeleted extends AccountState {
   const AccountDeleted();
+}
+
+/// The "change your password" email was sent to [email].
+final class AccountPasswordResetSent extends AccountState {
+  const AccountPasswordResetSent(this.email);
+
+  final String email;
+
+  @override
+  List<Object?> get props => [email];
 }
 
 final class AccountError extends AccountState {
